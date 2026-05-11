@@ -47,6 +47,50 @@ html.dark-mode .footer-link {
   color: #DCDDDE;
 }
 
+
+
+body {
+  font-family: system-ui;
+  background: #0f0f13;
+  color: #eee;
+  margin: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+textarea {
+  width: 90%;
+  height: 220px;
+  background: #1b1b22;
+  color: #e8e8e8;
+  border: none;
+  padding: 16px;
+  font-family: monospace;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+button {
+  margin-top: 12px;
+  padding: 10px 20px;
+  border: none;
+  background: #5a67ff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+pre {
+  margin-top: 20px;
+  background: #0a0a0f;
+  padding: 16px;
+  border-radius: 8px;
+  min-height: 120px;
+}
+
 /* ================================
    Base Styles
 ================================== */

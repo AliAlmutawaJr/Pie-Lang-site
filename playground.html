@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pie Playground</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Pie Playground</h1>
+
+<textarea id="editor" spellcheck="false">
+__builtin_print("hello world")
+</textarea>
+
+<button id="FUCK">Run</button>
+
+<pre id="terminal"></pre>
+
+</div>
+
+<script>
+Module = {
+  noInitialRun: true,
+
+  print: (text) => {
+    terminal.textContent += text + "\n"
+  },
+
+  printErr: (text) => {
+    terminal.textContent += text + "\n"
+  },
+
+  preRun: [function () {
+
+    const input = editor.value + "\n"
+    const data = new TextEncoder().encode(input)
+
+    let i = 0
+
+    FS.init(
+      () => (i < data.length ? data[i++] : null), // stdin
+      (c) => terminal.textContent += String.fromCharCode(c), // stdout
+      (c) => terminal.textContent += String.fromCharCode(c)  // stderr
+    )
+
+  }]
+}
+</script>
+
+<script src="wasm/pie.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>

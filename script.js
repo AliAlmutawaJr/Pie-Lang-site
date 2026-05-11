@@ -96,7 +96,7 @@ window.addEventListener("DOMContentLoaded", () => {
     };
     marked.use(admonitionExtension);
 
-    const url = `https://raw.githubusercontent.com/PiCake314/Pie/refs/heads/main/README.md?t=${Date.now()}`;
+    const url = `https://raw.githubusercontent.com/AliAlmutawaJr/Pie/refs/heads/main/README.md?t=${Date.now()}`;
 
     fetch(url)
       .then(res => {
@@ -171,7 +171,7 @@ window.addEventListener("DOMContentLoaded", () => {
     };
     marked.use(admonitionExtension);
 
-    const url = `https://raw.githubusercontent.com/PiCake314/Pie/refs/heads/main/spec.md?t=${Date.now()}`;
+    const url = `https://raw.githubusercontent.com/AliAlmutawaJr/Pie/refs/heads/main/spec.md?t=${Date.now()}`;
 
     fetch(url)
       .then(res => {
@@ -202,7 +202,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // ✅ Fetch latest GitHub release version and update DOM
-  fetch("https://api.github.com/repos/PiCake314/Pie/releases/latest")
+  fetch("https://api.github.com/repos/AliAlmutawaJr/Pie/releases/latest")
     .then(res => res.json())
     .then(data => {
       let versionRaw = data.tag_name || data.name || "";
