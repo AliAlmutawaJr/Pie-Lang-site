@@ -57,13 +57,13 @@ window.addEventListener("DOMContentLoaded", () => {
   const docsContainer = document.getElementById("docs-container");
   if (docsContainer) {
     if (typeof marked === 'undefined') {
-      docsContainer.innerHTML = "<p>❌ Marked library not loaded. Please check your internet connection.</p>";
+      docsContainer.innerHTML = "<p>Marked library not loaded. Please check your internet connection.</p>";
       return;
     }
 
     docsContainer.innerHTML = "<p>Loading documentation...</p>";
 
-    // ✅ Custom Admonition Block Support
+    // Custom Admonition Block Support
     const admonitionExtension = {
       extensions: [{
         name: 'admonition',
@@ -121,7 +121,7 @@ window.addEventListener("DOMContentLoaded", () => {
         Prism.highlightAll();
       })
       .catch(err => {
-        docsContainer.innerHTML = "<p>❌ Failed to load docs. Try again later.</p>";
+        docsContainer.innerHTML = "<p>Failed to load docs. Try again later.</p>";
         console.error("Error loading docs:", err);
       });
   }
@@ -132,13 +132,13 @@ window.addEventListener("DOMContentLoaded", () => {
   const specContainer = document.getElementById("spec-container");
   if (specContainer) {
     if (typeof marked === 'undefined') {
-      specContainer.innerHTML = "<p>❌ Marked library not loaded. Please check your internet connection.</p>";
+      specContainer.innerHTML = "<p>Marked library not loaded. Please check your internet connection.</p>";
       return;
     }
 
     specContainer.innerHTML = "<p>Loading documentation...</p>";
 
-    // ✅ Custom Admonition Block Support
+    // Custom Admonition Block Support
     const admonitionExtension = {
       extensions: [{
         name: 'admonition',
@@ -196,12 +196,12 @@ window.addEventListener("DOMContentLoaded", () => {
         Prism.highlightAll();
       })
       .catch(err => {
-        specContainer.innerHTML = "<p>❌ Failed to load docs. Try again later.</p>";
+        specContainer.innerHTML = "<p>Failed to load docs. Try again later.</p>";
         console.error("Error loading docs:", err);
       });
   }
 
-  // ✅ Fetch latest GitHub release version and update DOM
+  // Fetch latest GitHub release version and update DOM
   fetch("https://api.github.com/repos/AliAlmutawaJr/Pie/releases/latest")
     .then(res => res.json())
     .then(data => {
@@ -209,7 +209,7 @@ window.addEventListener("DOMContentLoaded", () => {
       let versionClean = versionRaw.replace(/^Release-/, ''); // Remove 'Release-' prefix
       versionClean = versionClean.split('-')[0];
       if (!versionClean) {
-        console.warn("⚠️ No valid version found in GitHub release data.");  
+        console.warn("No valid version found in GitHub release data.");  
         return;
       }
 

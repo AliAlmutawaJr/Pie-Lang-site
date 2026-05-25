@@ -1,15 +1,15 @@
 const editor = document.getElementById("editor")
 const terminal = document.getElementById("terminal")
-const FUCK = document.getElementById("FUCK")
+const run = document.getElementById("Run")
 
 
-FUCK.onclick = () => {
+run.onclick = () => {
   terminal.textContent = ""
   Module.callMain([])
 }
 
 
-// FUCK.onclick = () => {
+// run.onclick = () => {
 
 //   terminal.textContent = ""
 
