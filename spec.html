@@ -4,11 +4,13 @@
 <script>
   // Apply dark mode immediately to avoid white flash
   ( () => {
-      // document.documentElement.classList.add("dark-mode");
-
-    const isDark = localStorage.getItem("theme") === "dark";
-    if (isDark) {
       document.documentElement.classList.add("dark-mode");
+
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark-mode");
+    }
+    else {
+        document.documentElement.classList.remove("dark-mode");
     }
   })();
 </script>
@@ -17,7 +19,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="img/PiLangIconBG_REMOVED.png">
-  <title>Pie | A High-Level Interpreted Language | Lower Chaos Closures</title>
+  <title>Pie</title>
   <link rel="stylesheet" href="./style.css">
   <script src="script.js" defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
@@ -39,8 +41,8 @@
       <div class="nav-links" id="navLinks">
         <ul>
           <li><a href="index.html">Home</a></li>
-          <li><a href="https://github.com/AliAlmutawaJr/Pie" target="_blank">Download</a>
-          </li>
+          <li><a href="https://github.com/AliAlmutawaJr/Pie" target="_blank">Download</a></li>
+          <li><a href="playground.html" target="_blank">Try Pie!</a></li>
           <li><a href="docs.html">Docs</a></li>
           <li><a href="spec.html">Spec</a></li>
           <li><i class="bi bi-moon toggle-desktop" id="toggleDark"></i></li>

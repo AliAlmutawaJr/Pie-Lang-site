@@ -3,15 +3,15 @@
 
 <script>
   // Apply dark mode immediately to avoid white flash
-  (function () {
+  ( () => {
       document.documentElement.classList.add("dark-mode");
 
-    try {
-      const isDark = localStorage.getItem("theme") === "dark";
-      if (isDark) {
-        document.documentElement.classList.add("dark-mode");
-      }
-    } catch (e) { }
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark-mode");
+    }
+    else {
+        document.documentElement.classList.remove("dark-mode");
+    }
   })();
 </script>
 
@@ -40,6 +40,7 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="https://github.com/AliAlmutawaJr/Pie" target="_blank">Download</a></li>
+          <li><a href="playground.html" target="_blank">Try Pie!</a></li>
           <li><a href="docs.html">Docs</a></li>
           <li><a href="spec.html">Spec</a></li>
           <li><i class="bi bi-moon toggle-desktop" id="toggleDark"></i></li>
@@ -59,9 +60,7 @@
             <!-- <span class="version-beta">Beta</span> -->
           </h1>
         </div>
-        <p style="text-align: center;">an artistic interpreted programming language <br>
-          designed to be expressive, versatile, and easy to use.
-        </p>
+        <p style="text-align: center;">an artistic interpreted programming language..!</p>
         <div class="link__holder">
           <a class="link github-link" href="https://github.com/AliAlmutawaJr/Pie/" target="_blank">
             <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab"
