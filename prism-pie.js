@@ -1,6 +1,6 @@
 Prism.languages.pie = {
   'comment': {
-    pattern: /\.:(?:.*$)/,
+    pattern: /\.:(?!:)/, // .:(?!:) // \.:(?:.*$)
     greedy: true
   },
   'string': {
