@@ -303,7 +303,7 @@ const codeSamples = {
   Human: Type = class {
     name: String = "";
     age: Int = 0;
-    pet = "Cat"
+    pet = "Cat";
   };
 
   h: Human = Human("Pie", 3);
@@ -319,7 +319,7 @@ const codeSamples = {
   infix * = (a: Int, b: Int): Int  => __builtin_mul(a, b);
   infix < = (a: Int, b: Int): Bool => __builtin_lt (a, b);
 
-  mixfix([CALL -]) if : : else : = (cond: Bool, thn: Syntax, els: Syntax)
+  mixfix(LOW +) if : : else : = (cond: Bool, \`thn\`, \`els\`)
     => __builtin_eval(__builtin_conditional(cond, thn, els));
 
   fact = (n) => if (n < 2) { 1; } else { n * fact(n - 1); };
@@ -346,7 +346,7 @@ const codeSamples = {
 "Syntax Type": [`  print = __builtin_print;
   infix + = (a: Int, b: Int) => __builtin_add(a, b);
 
-  ast_node: Syntax = 1 + a;
+  ast_node: Syntax = \`1 + a\`;
 
   a = 5;
 
