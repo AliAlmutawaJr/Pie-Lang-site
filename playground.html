@@ -176,7 +176,10 @@ print(2 + 2);</textarea>
 
             try {
                 const args = ["-c", inputCode];
-                Module.callMain(args);
+                // Module.callMain(args);
+
+                Module.ccall('execute', null, ['string'], [inputCode]);
+
             } catch (e) {
                 outputTerminal.innerText += "\nRuntime Exception!";
                 // outputTerminal.innerText += "\n[Runtime Exception] " + e.message;
