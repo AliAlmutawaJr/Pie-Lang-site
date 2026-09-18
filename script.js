@@ -313,6 +313,25 @@ const codeSamples = {
   "Members are required to be assigned a value. Constructors are provided automatically."
 ],
 
+"Match": [`  print = __builtin_print;
+
+  Human: Type = class {
+    name: String = "";
+    age: Int = 0;
+  };
+
+  h: Human = Human("Pie", 3);
+
+  match h {
+    {name = "Ali", age: Int} => print("Ali is {age} years old");
+    {name, = 3} => print("{name} is three years old");
+    {name, age} => print("{name} is {age} years old");
+  };
+
+  `,
+  "Match lets you match against the structure, type, and the value of a variable!"
+],
+
 "Operators": [`  print = __builtin_print;
 
   infix - = (a: Int, b: Int): Int  => __builtin_sub(a, b);
@@ -346,14 +365,12 @@ const codeSamples = {
 "Syntax Type": [`  print = __builtin_print;
   infix + = (a: Int, b: Int) => __builtin_add(a, b);
 
-  ast_node: Syntax = \`1 + a\`;
+  ast_node: Syntax = \`print("Hello")\`;
 
-  a = 5;
-
-  result = __builtin_eval(a);
-  print(result);
+  print("Bye");
+  __builtin_eval(a);
   `,
-  "The `Syntax` type gives you a handle to the AST node represeting an expression"
+  "The `Syntax` type gives you a handle to the AST node represeting an expression, which allows for lazy evaluation!"
 ],
 
 "Quirks": [`  print = __builtin_print;
