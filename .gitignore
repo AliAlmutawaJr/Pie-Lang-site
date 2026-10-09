@@ -1,2 +1,8 @@
 .DS_Store
 node_modules/
+
+public/index.html
+public/docs.html
+public/playground.html
+public/spec.html
+public/assets/js/examples.js

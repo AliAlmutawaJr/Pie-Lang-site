@@ -22,6 +22,14 @@ Pages works; `CNAME` points at pielang.org).
 | `pie-sw.js` | Service worker that lets a running program wait for typed input |
 | `Pie.js`, `Pie.wasm` | The Emscripten build of Pie |
 
+## Deploying
+
+- **Vercel:** works as is. `vercel.json` tells it to run `npm run build` and
+  publish the `public/` folder, which the build fills with just the website's
+  files.
+- **GitHub Pages / any static host:** serve the repository root (the built
+  pages sit there too), or upload the `public/` folder.
+  
 ## Building
 
 ```sh
