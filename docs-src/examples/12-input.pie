@@ -1,0 +1,11 @@
+.: Reading input
+.: Run it, then type your answers right in the output panel.
+print = __builtin_print;
+
+print("What's your name? ", end = "");
+name = __builtin_input_str();
+
+print("How many pies can you eat? ", end = "");
+pies = __builtin_input_int();
+
+print("Nice to meet you, {name}! {pies} pies coming up.");

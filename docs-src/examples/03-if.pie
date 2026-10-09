@@ -1,0 +1,16 @@
+.: Build your own if
+.: `if` isn't built in either. A mixfix operator with syntax
+.: parameters (the backticks) only evaluates the branch it needs.
+print = __builtin_print;
+
+infix * = (a, b) => __builtin_mul(a, b);
+infix - = (a, b) => __builtin_sub(a, b);
+infix < = (a, b) => __builtin_lt(a, b);
+
+mixfix(LOW +) if : then : else : =
+    (cond, `yes`, `no`) => __builtin_eval(__builtin_conditional(cond, yes, no));
+
+factorial = (n) => if n < 2 then 1 else n * factorial(n - 1);
+
+print(factorial(5));
+print(factorial(30)); .: Ints never overflow

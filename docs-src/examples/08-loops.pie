@@ -1,0 +1,25 @@
+.: Loops and comprehensions
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+infix * = (a, b) => __builtin_mul(a, b);
+infix % = (a, b) => __builtin_mod(a, b);
+infix == = (a, b) => __builtin_eq(a, b);
+
+loop 2 print("hip hip hooray");
+
+loop i : 3 print("round {i}");
+
+loop fruit : {"apple", "cherry", "peach"} print("{fruit} pie");
+
+.: Loops build lists and maps, with an optional filter.
+print({ loop i : 8 => i * i });
+print({ loop i : 10, i % 3 == 0 => i });
+
+.: Any object with hasNext() and next() is an iterator.
+Countdown = class {
+    n = 0;
+    hasNext = () => __builtin_gt(n, 0);
+    next = () => { now = n; n = __builtin_sub(n, 1); now; };
+};
+loop t : Countdown(3) print(t);
+print("liftoff!");

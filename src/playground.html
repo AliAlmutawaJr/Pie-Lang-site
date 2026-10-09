@@ -1,23 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pie playground</title>
-<meta name="description" content="Write and run Pie code in your browser.">
-<meta property="og:title" content="Pie playground">
-<meta property="og:description" content="Write and run Pie code in your browser.">
-<meta property="og:image" content="https://pielang.org/assets/img/pie-wordmark.png">
-<meta name="theme-color" content="#FFBA57">
-<link rel="icon" href="assets/img/pie.svg" type="image/svg+xml">
-<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="apple-touch-icon" href="assets/img/pie-180.png">
-<script>(function () { try { var t = localStorage.getItem("pie-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {} })();</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="assets/css/site.css">
-<script src="assets/js/site.js" defer></script>
+{{> head title="Pie playground" description="Write and run Pie code in your browser."}}
 <script src="assets/js/pie-highlight.js" defer></script>
 <script src="assets/js/pie-editor.js" defer></script>
 <script src="assets/js/examples.js" defer></script>
@@ -25,27 +9,7 @@
 <script src="assets/js/playground.js" defer></script>
 </head>
 <body class="playground-page">
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="site-nav">
-    <div class="inner">
-        <a class="brand" href="index.html"><img src="assets/img/pie.svg" alt="" width="44" height="42">Pie</a>
-        <nav aria-label="Main">
-            <ul class="nav-links" id="nav-links">
-                <li><a href="playground.html" aria-current="page">Playground</a></li>
-                <li><a href="docs.html">Docs</a></li>
-                <li><a href="https://github.com/AliAlmutawaJr/Pie/releases">Download</a></li>
-                <li><a href="https://github.com/AliAlmutawaJr/Pie">GitHub</a></li>
-            </ul>
-        </nav>
-        <button class="icon-btn nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        </button>
-        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme">
-            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
-            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
-        </button>
-    </div>
-</header>
+{{> nav current=playground}}
 
 <main id="main" class="pg">
     <h1 class="visually-hidden">Pie playground</h1>

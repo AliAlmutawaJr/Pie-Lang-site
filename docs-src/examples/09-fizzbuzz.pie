@@ -1,0 +1,15 @@
+.: FizzBuzz
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+infix % = (a, b) => __builtin_mod(a, b);
+infix == = (a, b) => __builtin_eq(a, b);
+infix(&&) and = (a, b) => __builtin_and(a, b);
+
+fizzbuzz = (n) => match n {
+    x, x % 15 == 0 => "FizzBuzz";
+    x, x % 3 == 0  => "Fizz";
+    x, x % 5 == 0  => "Buzz";
+    x              => x;
+};
+
+loop i : 20 print(fizzbuzz(i + 1));

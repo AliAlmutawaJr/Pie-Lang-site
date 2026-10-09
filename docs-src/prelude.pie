@@ -1,0 +1,24 @@
+.: Starter operators: Pie has none built in, so we make our own.
+print = __builtin_print;
+
+infix + = (a, b) => __builtin_add(a, b);
+infix + = (a: String, b: String) => __builtin_concat(a, b);
+infix - = (a, b) => __builtin_sub(a, b);
+infix * = (a, b) => __builtin_mul(a, b);
+infix / = (a, b) => __builtin_div(a, b);
+infix % = (a, b) => __builtin_mod(a, b);
+prefix - = (x) => __builtin_neg(x);
+
+infix == = (a, b) => __builtin_eq(a, b);
+infix != = (a, b) => __builtin_not(__builtin_eq(a, b));
+infix <  = (a, b) => __builtin_lt(a, b);
+infix <= = (a, b) => __builtin_leq(a, b);
+infix >  = (a, b) => __builtin_gt(a, b);
+infix >= = (a, b) => __builtin_geq(a, b);
+
+infix(&&) and = (a, b) => __builtin_and(a, b);
+infix(||) or  = (a, b) => __builtin_or(a, b);
+prefix(!) not = (x) => __builtin_not(x);
+
+mixfix(LOW +) if : then : else : =
+    (cond, `yes`, `no`) => __builtin_eval(__builtin_conditional(cond, yes, no));

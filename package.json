@@ -1,0 +1,11 @@
+{
+  "name": "pielang-site",
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "check": "node tools/check-examples.mjs"
+  },
+  "devDependencies": {
+    "marked": "^18.0.10"
+  }
+}

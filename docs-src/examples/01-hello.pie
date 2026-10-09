@@ -1,0 +1,7 @@
+.: Hello, Pie
+.: Built-in functions start with __builtin_.
+.: Give them friendlier names, then use them.
+print = __builtin_print;
+
+name = "world";
+print("Hello, {name}!");

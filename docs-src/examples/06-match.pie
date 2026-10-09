@@ -1,0 +1,21 @@
+.: Pattern matching
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+infix * = (a, b) => __builtin_mul(a, b);
+infix < = (a, b) => __builtin_lt(a, b);
+
+Circle = class { r = 0; };
+Rect = class { w = 0; h = 0; };
+
+describe = (x) => match x {
+    = 0              => "nothing";
+    n: Int, n < 0    => "a negative number";
+    : Int            => "a number";
+    : String         => "some text: {x}";
+    {r}: Circle      => "a circle of area {3 * r * r}";
+    {w, h}: Rect     => "a {w} by {h} rectangle";
+    {first, ...rest} => "a list starting with {first}";
+};
+
+loop thing : {0, __builtin_neg(5), 42, "pie", Circle(2), Rect(3, 4), {7, 8, 9}}
+    print(describe(thing));

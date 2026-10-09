@@ -1,0 +1,23 @@
+.: Guess the number
+.: Run it and play in the output panel.
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+infix < = (a, b) => __builtin_lt(a, b);
+infix == = (a, b) => __builtin_eq(a, b);
+
+mixfix(LOW +) if : then : else : =
+    (cond, `yes`, `no`) => __builtin_eval(__builtin_conditional(cond, yes, no));
+
+secret = __builtin_rand_int(1, 100);
+tries = 0;
+print("I'm thinking of a number from 1 to 100.");
+
+loop {
+    print("Your guess: ", end = "");
+    guess = __builtin_input_int();
+    tries = tries + 1;
+
+    if guess == secret then (break print("Got it in {tries} tries!"))
+    else if guess < secret then print("Higher!")
+    else print("Lower!");
+};

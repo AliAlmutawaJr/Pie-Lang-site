@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+{{> head title="Pie, a programming language you finish yourself" description="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser."}}
+<script src="assets/js/pie-highlight.js" defer></script>
+<script src="assets/js/examples.js" defer></script>
+<script src="assets/js/pie-runner.js" defer></script>
+<script src="assets/js/home.js" defer></script>
+</head>
+<body>
+{{> nav}}
+
+<main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="inner">
+            <div>
+                {{> hero-mark}}
+                <h1 id="hero-title">Pie</h1>
+                <!-- <p class="lede">Even <code class="op-cycle" aria-hidden="true"><span>+</span></code><span class="visually-hidden">+</span> is yours to define.</p> -->
+                <!-- <br/> -->
+                <p class="lede">Where even <code class="op-cycle" aria-hidden="true"><span>+</span></code><span class="visually-hidden">+</span> is yours to define.</p>
+                <div class="actions">
+                    <a class="btn btn-primary" href="playground.html">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+                        Open the playground
+                    </a>
+                    <a class="btn" href="docs.html">Read the docs</a>
+                </div>
+                <!-- <p class="meta">Free and open source!</p> -->
+                <!-- . Runs on Linux and macOS, and right here in your browser. -->
+            </div>
+
+            <div class="oven" id="oven">
+                <div class="oven-tabs" role="tablist" aria-label="Examples"></div>
+                <pre id="oven-code" role="tabpanel"><code></code></pre>
+                <div class="oven-bar">
+                    <button class="btn-small run" id="oven-run" type="button">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+                        Run
+                    </button>
+                    <a class="btn-small" id="oven-open" href="playground.html">Edit in playground</a>
+                    <span class="spacer"></span>
+                    <span class="status" id="oven-status" aria-live="polite"></span>
+                </div>
+                <pre class="oven-out" id="oven-out" aria-live="polite" aria-label="Output"></pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" aria-labelledby="ideas-title">
+        <h2 id="ideas-title">What makes it Pie?</h2>
+        <p class="intro">Pie keeps the core tiny and hands you the parts other languages hide.<br/>Four ideas shape everything else.</p>
+
+        <article class="idea">
+            <div>
+                <h3>No operators until you make them</h3>
+                <p>Pie doesn't come with <code>+</code>, <code>==</code> or even <code>if</code>. You write them as ordinary functions: prefix, infix, suffix, wrapped around a value like <code>| x |</code>, or spread across a sentence like <code>if a then b else c</code>.</p>
+                <p>You pick the precedence and the overloads, too.</p>
+                <a class="btn-small try" href="{{idea-link:1-operators}}">Try it</a>
+            </div>
+            <div class="snippet"><pre><code>{{idea:1-operators}}</code></pre><div class="snippet-out">{{idea-out:1-operators}}</div></div>
+        </article>
+
+        <article class="idea">
+            <div>
+                <h3>Everything is an expression</h3>
+                <p>Blocks, loops, matches and assignments all produce a value, so they go anywhere a value can. There's no <code>return</code>, no statements and no <code>null</code>.</p>
+                <a class="btn-small try" href="{{idea-link:2-expressions}}">Try it</a>
+            </div>
+            <div class="snippet"><pre><code>{{idea:2-expressions}}</code></pre><div class="snippet-out">{{idea-out:2-expressions}}</div></div>
+        </article>
+
+        <article class="idea">
+            <div>
+                <h3>Assign to anything</h3>
+                <p>The left side of <code>=</code> can be any expression. Teach Pie that <code>2 + 2</code> is <code>5</code> and it will remember, until the end of the block.</p>
+                <!-- <p>It isn't useful. It is consistent, and that's the point.</p> -->
+                <a class="btn-small try" href="{{idea-link:3-assign}}">Try it</a>
+            </div>
+            <div class="snippet"><pre><code>{{idea:3-assign}}</code></pre><div class="snippet-out">{{idea-out:3-assign}}</div></div>
+        </article>
+
+        <article class="idea">
+            <div>
+                <h3>Types are values</h3>
+                <p>Store types in variables, pass them to functions, and use plain values as types. Any function that returns a <code>Bool</code> can be a type, too.</p>
+                <a class="btn-small try" href="{{idea-link:4-types}}">Try it</a>
+            </div>
+            <div class="snippet"><pre><code>{{idea:4-types}}</code></pre><div class="snippet-out">{{idea-out:4-types}}</div></div>
+        </article>
+    </section>
+
+    <div class="band">
+        <section class="section" aria-labelledby="install-title">
+            <!-- <h2 id="install-title">Get Pie on your computer</h2> -->
+            <h2 id="install-title">Get a piece of the Pie!</h2>
+            <!-- <p class="intro">The playground is enough to learn the language. Install it when you want to write real files.</p> -->
+            <p class="intro">Grab a build for Linux or macOS from the <a href="https://github.com/AliAlmutawaJr/Pie/releases">releases page</a>, or build from source:</p>
+            <ol class="steps">
+                <li>
+                    <h3>Download</h3>
+                    <p>Clone the source code:</p>
+<pre>git clone https://github.com/AliAlmutawaJr/Pie
+cd Pie && mkdir build && cd build
+cmake .. && make</pre>
+                </li>
+                <li>
+                    <h3>Write a file</h3>
+                    <p>Save this as <code>hello.pie</code>: </p>
+<pre>
+
+__builtin_print("Hello, Pie!");
+
+</pre>
+                </li>
+                <li>
+                    <h3>Run it</h3>
+                    <p>Invoke the <code>Pie</code> executable:</p>
+<pre>
+$ ./Pie hello.pie
+Hello, Pie!
+
+</pre>
+                </li>
+            </ol>
+        </section>
+    </div>
+</main>
+
+{{> footer}}
+</body>
+</html>

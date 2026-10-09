@@ -1,0 +1,18 @@
+.: Make your own operators
+.: Pie has no operators at all until you define them.
+print = __builtin_print;
+
+infix + = (a, b) => __builtin_add(a, b);
+infix * = (a, b) => __builtin_mul(a, b);
+infix + = (a: String, b: String) => __builtin_concat(a, b);
+
+print(1 + 2 * 3);
+print("Pie" + " is " + "sweet");
+
+.: Precedence comes from an operator you already know.
+infix(* +) ** = (a, b) => __builtin_pow(a, b);
+print(2 * 3 ** 2);
+
+.: Operators can be words, too.
+suffix([]) squared = (x) => x * x;
+print(12 squared);

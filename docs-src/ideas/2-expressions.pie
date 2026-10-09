@@ -1,0 +1,10 @@
+print = __builtin_print;
+
+slices = (n) => match n {
+    = 1 => "one slice";
+    _   => "{n} slices";
+};
+print(slices(8));
+
+answer = { a = 40; b = 2; __builtin_add(a, b); };
+print(answer);

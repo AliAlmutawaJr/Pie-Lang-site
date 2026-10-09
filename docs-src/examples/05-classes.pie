@@ -1,0 +1,19 @@
+.: Classes and cascades
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+
+Pie = class {
+    filling = "apple";
+    slices = 8;
+    toppings = {};
+
+    top = (t) => __builtin_push(toppings, t);
+    toString = () => "{filling} pie, {slices} slices, toppings: {toppings}";
+};
+
+.: Arguments fill the members in order.
+print(Pie("cherry"));
+
+.: `..` calls a method but gives back the object.
+dessert = Pie("pecan", 6)..top("cream")..top("caramel");
+print(dessert);

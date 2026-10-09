@@ -1,0 +1,7 @@
+Size = union { "small"; "large"; };
+order: Size = "large";
+
+Even = (n: Int) => __builtin_eq(__builtin_mod(n, 2), 0);
+slices: Even = 8;
+
+__builtin_print(order, slices);

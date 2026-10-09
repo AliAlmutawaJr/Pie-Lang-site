@@ -1,139 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<script>
-  // Apply dark mode immediately to avoid white flash
-  ( () => {
-      document.documentElement.classList.add("dark-mode");
-
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.classList.add("dark-mode");
-    }
-    else {
-        document.documentElement.classList.remove("dark-mode");
-    }
-  })();
-</script>
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <link rel="icon" type="image/png" href="img/PieLangIcon_No_BG.png">
-  <title>Pie Lang</title>
-  <link rel="stylesheet" href="./style.css">
-  <script src="script.js" defer></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
-  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
-  <script src="prism-pie.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pie, a programming language you finish yourself</title>
+<meta name="description" content="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser.">
+<meta property="og:title" content="Pie, a programming language you finish yourself">
+<meta property="og:description" content="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser.">
+<meta property="og:image" content="https://pielang.org/assets/img/pie-wordmark.png">
+<meta name="theme-color" content="#FFBA57">
+<link rel="icon" href="assets/img/pie.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/pie-180.png">
+<script>(function () { try { var t = localStorage.getItem("pie-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {} })();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/pie-highlight.js" defer></script>
+<script src="assets/js/examples.js" defer></script>
+<script src="assets/js/pie-runner.js" defer></script>
+<script src="assets/js/home.js" defer></script>
 </head>
-
 <body>
-  <div class="nav-bar">
-    <nav>
-      <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
-        <i class="bi bi-list"></i>
-      </button>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-nav">
+    <div class="inner">
+        <a class="brand" href="index.html"><img src="assets/img/pie.svg" alt="" width="44" height="42">Pie</a>
+        <nav aria-label="Main">
+            <ul class="nav-links" id="nav-links">
+                <li><a href="playground.html">Playground</a></li>
+                <li><a href="docs.html">Docs</a></li>
+                <li><a href="https://github.com/AliAlmutawaJr/Pie/releases">Download</a></li>
+                <li><a href="https://github.com/AliAlmutawaJr/Pie">GitHub</a></li>
+            </ul>
+        </nav>
+        <button class="icon-btn nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme">
+            <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+            <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        </button>
+    </div>
+</header>
 
-      <!-- <li><i class="bi bi-moon toggle-mobile" id="toggleDarkMobile"></i></li> -->
+<main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="inner">
+            <div>
+                <svg class="hero-mark" viewBox="0 0 120 113.4" role="img" aria-label="A steaming pie, the Pie logo"><path fill="#BF6024" d="m99 84.1-0.8-0.5c-2.2 2.1-5.4 3.9-9.5 3.9-3.4 0-6.6-1.2-9.2-3.6l-0.4-0.3c-2 1.9-5.1 3.9-9.6 3.9-3.4 0-6.5-1.1-9.1-3.5l-0.3-0.4c-2 2-5 3.9-9.4 3.9-3.4 0-6.4-1.2-9-3.6l-0.4-0.3c-2 1.9-5 3.9-9.7 3.9-3.2 0-6.3-1.1-8.9-3.2l-0.7-0.7c-1.6 1.5-4 2.7-7.1 3.1l4.4 13.3c1.2 3.8 2.8 7.2 7.9 7.2h66.3c3.9 0 6.1-1.9 7.1-4.7l5.1-15.8c-2.3-0.2-4.5-1-6.7-2.6z"/><path fill="#FFBA57" d="m106.9 69.9c-1 0-1.8-0.5-2.1-1.4s-9.4-23.1-44.7-23.1c-27.6 0-39.9 13.2-44.1 20-1.1 3.1-0.4 4.5-3.1 4.5-1.7 0.1-7.2 0.8-7.2 4.5 0 2.7 2.5 6.7 8.1 7.6 4.1 0.1 5.7-1.7 6.6-2.6l0.1-0.1c0.5-0.6 1.1-1.4 2.4-1.4 0.5 0 0.9 0.3 1.2 0.6 2.1 2.5 4.5 4.4 8.1 4.4 3.2 0 5.7-1.4 7.4-3.5 0.5-0.8 1.2-1.5 2.1-1.5 0.8-0.1 1.2 0.3 1.7 0.7 1.9 2.4 4.2 4.1 7.4 4.3 3.2 0.1 5.9-1.3 7.5-3.4 0.5-0.8 1.2-1.6 2.1-1.6 0.8-0.1 1.3 0.3 1.7 0.7 1.9 2.4 4.3 4.1 7.5 4.3 3.2 0.1 5.9-1.3 7.7-3.5 0.5-0.7 1-1.5 2.2-1.5 0.6 0 1 0.3 1.3 0.6 2.1 2.5 4.5 4.4 8.1 4.4 3.2 0 5.8-1.3 7.5-3.5 0.5-0.8 1.1-1.6 2.2-1.6 0.7 0 1.1 0.3 1.5 0.7 1.7 1.8 3.3 3.4 6.7 3.4 5 0 7.6-3.5 7.6-7.4 0-3.6-5.4-4.6-7.5-4.6z"/><path fill="#28150B" d="m108.4 65.8c-3-6.8-13.4-19.8-30-22.3-4.9-1.4-11.2-2.8-18.4-2.8s-13.5 1.2-18.4 2.4c-17.1 4.5-26.1 15-30 22.7-4.6 0.4-9.9 2.7-9.9 8.5 0 4.6 3.4 9.8 8.6 11.8v0.2l5.4 16.6c1.9 5.6 5.5 8.7 11.4 8.7h66.4c6.1 0 10-3.1 11.6-8.7l5.2-16.9c4.6-1.5 8.3-5.1 8.5-10.7-0.1-6.7-6-9-10.4-9.5zm-7.8 36.6c-1 2.9-3.2 4.8-6.9 4.8h-66.4c-5 0-6.7-3.4-7.5-6l-4.9-14.5c3-0.3 5.4-1.4 7.1-3l0.7 0.6c2.6 2.1 5.4 3.2 8.9 3.2 4.5 0 7.7-1.8 9.7-3.9l0.4 0.3c2.6 2.4 5.8 3.6 9 3.6 4.2 0 7.4-1.6 9.4-3.9l0.3 0.3c2.6 2.2 5.7 3.6 9.1 3.6 4.1 0 7.3-1.5 9.6-3.8v-0.1l0.4 0.4c2.6 2.3 5.8 3.5 9.2 3.5 4 0 7.3-1.5 9.5-3.6v-0.3l0.8 0.7c1.9 1.3 4.1 2.2 6.7 2.4l-5.1 15.7zm5.8-20.4c-3.4 0.3-5-1.1-6.6-3.1-1-1.1-2.7-1.5-3.5 0-1.8 2-4 4-7.8 4-3.2 0-5.6-1.4-7.6-4-0.9-1.1-2.8-1.5-3.8 0-1.8 2-4 4-7.6 4-3.4 0-6-1.3-7.8-4-0.8-1.2-2.8-1.4-3.6 0-1.6 2-4 4-7.6 4-3.2 0-5.6-1.4-7.3-4-0.9-1.4-2.8-1.4-3.7 0-1.8 2-4.2 4-7.9 4-3.2 0-5.7-1-7.9-4-0.9-1.2-2.6-1.4-3.8 0.2-1.4 1.3-3 3-6.4 2.9-5.4 0-7.8-3.6-7.8-7.5 0-3.4 4.8-4.5 7.4-4.5 1 0 1.7-0.5 2.1-1.5 1.2-3.6 10.5-23.2 44.8-23.2 30.9 0 42.3 14.8 44.8 23.2 0.4 1 1.1 1.4 2.1 1.4 2.6 0 7.4 1.2 7.4 4.4 0.1 3.8-3.6 7.4-7.9 7.7z"/><path fill="#28150B" d="m42.5 54.9c-1.7 1.6-4.1 4.3-5.8 7-1 2.4 2 4.6 4 2.4 1.3-2.4 3.2-4.6 4.9-6.2 2-1.6 0.4-4.8-2.3-4l-0.8 0.8z"/><path fill="#28150B" d="m77.5 54.5c-1.6-1.4-4.7 0.3-3.6 2.8l0.6 0.7c1.9 1.5 3.6 3.7 5 6 1.6 2.5 5 0.7 3.8-2.4-1.4-2.5-3.8-5.3-5.8-7.1z"/><path fill="#28150B" d="m60 53.9c-1.2 0-2.3 1-2.3 2.2v7.2c0 1.2 1 2.2 2.3 2.2s2.3-1 2.3-2.2v-7.2c0-1.2-1-2.2-2.3-2.2z"/><g class="steam"><path fill="#28150B" d="m43.5 34.8c1.8 2.3 5.3 0.5 3.7-2.5-1.7-1.6-2.9-4.3 0-7 3.5-3.7 5.3-9.8 0.8-15.3-1.9-2.1-4.9-0.4-3.9 2.4 2.8 2.7 3.5 6.3 0 10-3.3 3.6-5.2 8.1-0.6 12.7v-0.3z"/><path fill="#28150B" d="m56.8 34.7c1.6 2 5.1 0.8 3.7-2.3-2.1-2.9-2.1-6.7 1.1-10 3.5-4 7.6-11.2 0.8-20-1.9-1.9-5.2 0-3.2 2.9 4.3 4 3.9 9-0.4 13.8-4 4.5-6.1 9.4-2 15.6z"/><path fill="#28150B" d="m72.8 35.1c2 1.8 4.9-0.4 3.3-3-2-2-2-4.5 0-6.5 3.2-3.6 6.3-9.9 1.1-15.7-1.7-1.8-4.5-0.4-3.9 2.2 0.4 0.8 4.3 3.8 1.1 8.8-2.4 3.1-5.6 5.8-3.7 11.1 0.5 1.3 1 2.3 2.1 3.3v-0.2z"/></g></svg>
+                <h1 id="hero-title">Pie</h1>
+                <!-- <p class="lede">Even <code class="op-cycle" aria-hidden="true"><span>+</span></code><span class="visually-hidden">+</span> is yours to define.</p> -->
+                <!-- <br/> -->
+                <p class="lede">Where even <code class="op-cycle" aria-hidden="true"><span>+</span></code><span class="visually-hidden">+</span> is yours to define.</p>
+                <div class="actions">
+                    <a class="btn btn-primary" href="playground.html">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+                        Open the playground
+                    </a>
+                    <a class="btn" href="docs.html">Read the docs</a>
+                </div>
+                <!-- <p class="meta">Free and open source!</p> -->
+                <!-- . Runs on Linux and macOS, and right here in your browser. -->
+            </div>
 
-      <i class="bi bi-moon toggle-mobile" id="toggleDarkMobile"></i>
+            <div class="oven" id="oven">
+                <div class="oven-tabs" role="tablist" aria-label="Examples"></div>
+                <pre id="oven-code" role="tabpanel"><code></code></pre>
+                <div class="oven-bar">
+                    <button class="btn-small run" id="oven-run" type="button">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+                        Run
+                    </button>
+                    <a class="btn-small" id="oven-open" href="playground.html">Edit in playground</a>
+                    <span class="spacer"></span>
+                    <span class="status" id="oven-status" aria-live="polite"></span>
+                </div>
+                <pre class="oven-out" id="oven-out" aria-live="polite" aria-label="Output"></pre>
+            </div>
+        </div>
+    </section>
 
-      <div class="nav-links" id="navLinks">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="https://github.com/AliAlmutawaJr/Pie" target="_blank">Download</a></li>
-          <li><a href="playground.html">Try Pie!</a></li>
-          <li><a href="docs.html">Docs</a></li>
-          <li><a href="spec.html">Spec</a></li>
-          <li><i class="bi bi-moon toggle-desktop" id="toggleDark"></i></li>
-        </ul>
-      </div>
-    </nav>
-  </div>
+    <section class="section" aria-labelledby="ideas-title">
+        <h2 id="ideas-title">What makes it Pie?</h2>
+        <p class="intro">Pie keeps the core tiny and hands you the parts other languages hide.<br/>Four ideas shape everything else.</p>
 
-  <div class="container">
-    <div class="regular-layout">
-      <div class="left-page">
-        <img src="img/PieLangIcon_No_BG_cropped.png" class="mascot" alt="Pie Lang Icon">
+        <article class="idea">
+            <div>
+                <h3>No operators until you make them</h3>
+                <p>Pie doesn't come with <code>+</code>, <code>==</code> or even <code>if</code>. You write them as ordinary functions: prefix, infix, suffix, wrapped around a value like <code>| x |</code>, or spread across a sentence like <code>if a then b else c</code>.</p>
+                <p>You pick the precedence and the overloads, too.</p>
+                <a class="btn-small try" href="playground.html#code=aW5maXggKyA9IChhLCBiKSA9PiBfX2J1aWx0aW5fYWRkKGEsIGIpOwppbmZpeCAqID0gKGEsIGIpID0-IF9fYnVpbHRpbl9tdWwoYSwgYik7CmV4Zml4IHwgOiB8ID0gKHgpID0-IF9fYnVpbHRpbl9hYnMoeCk7CgpfX2J1aWx0aW5fcHJpbnQoMSArIDIgKiAzKTsKX19idWlsdGluX3ByaW50KHwgX19idWlsdGluX25lZyg3KSB8KTsK">Try it</a>
+            </div>
+            <div class="snippet"><pre><code><span class="tok-fix">infix</span> <span class="tok-op">+</span> <span class="tok-punct">=</span> <span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span> <span class="tok-punct">=&gt;</span> <span class="tok-builtin">__builtin_add</span><span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+<span class="tok-fix">infix</span> <span class="tok-op">*</span> <span class="tok-punct">=</span> <span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span> <span class="tok-punct">=&gt;</span> <span class="tok-builtin">__builtin_mul</span><span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+<span class="tok-fix">exfix</span> <span class="tok-op">|</span> <span class="tok-punct">:</span> <span class="tok-op">|</span> <span class="tok-punct">=</span> <span class="tok-punct">(</span><span class="tok-name">x</span><span class="tok-punct">)</span> <span class="tok-punct">=&gt;</span> <span class="tok-builtin">__builtin_abs</span><span class="tok-punct">(</span><span class="tok-name">x</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+
+<span class="tok-builtin">__builtin_print</span><span class="tok-punct">(</span><span class="tok-number">1</span> <span class="tok-op">+</span> <span class="tok-number">2</span> <span class="tok-op">*</span> <span class="tok-number">3</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+<span class="tok-builtin">__builtin_print</span><span class="tok-punct">(</span><span class="tok-op">|</span> <span class="tok-builtin">__builtin_neg</span><span class="tok-punct">(</span><span class="tok-number">7</span><span class="tok-punct">)</span> <span class="tok-op">|</span><span class="tok-punct">)</span><span class="tok-punct">;</span></code></pre><div class="snippet-out">7
+7</div></div>
+        </article>
+
+        <article class="idea">
+            <div>
+                <h3>Everything is an expression</h3>
+                <p>Blocks, loops, matches and assignments all produce a value, so they go anywhere a value can. There's no <code>return</code>, no statements and no <code>null</code>.</p>
+                <a class="btn-small try" href="playground.html#code=cHJpbnQgPSBfX2J1aWx0aW5fcHJpbnQ7CgpzbGljZXMgPSAobikgPT4gbWF0Y2ggbiB7CiAgICA9IDEgPT4gIm9uZSBzbGljZSI7CiAgICBfICAgPT4gIntufSBzbGljZXMiOwp9OwpwcmludChzbGljZXMoOCkpOwoKYW5zd2VyID0geyBhID0gNDA7IGIgPSAyOyBfX2J1aWx0aW5fYWRkKGEsIGIpOyB9OwpwcmludChhbnN3ZXIpOwo">Try it</a>
+            </div>
+            <div class="snippet"><pre><code><span class="tok-name">print</span> <span class="tok-punct">=</span> <span class="tok-builtin">__builtin_print</span><span class="tok-punct">;</span>
+
+<span class="tok-name">slices</span> <span class="tok-punct">=</span> <span class="tok-punct">(</span><span class="tok-name">n</span><span class="tok-punct">)</span> <span class="tok-punct">=&gt;</span> <span class="tok-keyword">match</span> <span class="tok-name">n</span> <span class="tok-punct">{</span>
+    <span class="tok-punct">=</span> <span class="tok-number">1</span> <span class="tok-punct">=&gt;</span> <span class="tok-string">"one slice"</span><span class="tok-punct">;</span>
+    <span class="tok-name">_</span>   <span class="tok-punct">=&gt;</span> <span class="tok-string">"<span class="tok-interp"><span class="tok-brace">{</span><span class="tok-name">n</span><span class="tok-brace">}</span></span> slices"</span><span class="tok-punct">;</span>
+<span class="tok-punct">}</span><span class="tok-punct">;</span>
+<span class="tok-fn">print</span><span class="tok-punct">(</span><span class="tok-fn">slices</span><span class="tok-punct">(</span><span class="tok-number">8</span><span class="tok-punct">)</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+
+<span class="tok-name">answer</span> <span class="tok-punct">=</span> <span class="tok-punct">{</span> <span class="tok-name">a</span> <span class="tok-punct">=</span> <span class="tok-number">40</span><span class="tok-punct">;</span> <span class="tok-name">b</span> <span class="tok-punct">=</span> <span class="tok-number">2</span><span class="tok-punct">;</span> <span class="tok-builtin">__builtin_add</span><span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span><span class="tok-punct">;</span> <span class="tok-punct">}</span><span class="tok-punct">;</span>
+<span class="tok-fn">print</span><span class="tok-punct">(</span><span class="tok-name">answer</span><span class="tok-punct">)</span><span class="tok-punct">;</span></code></pre><div class="snippet-out">8 slices
+42</div></div>
+        </article>
+
+        <article class="idea">
+            <div>
+                <h3>Assign to anything</h3>
+                <p>The left side of <code>=</code> can be any expression. Teach Pie that <code>2 + 2</code> is <code>5</code> and it will remember, until the end of the block.</p>
+                <!-- <p>It isn't useful. It is consistent, and that's the point.</p> -->
+                <a class="btn-small try" href="playground.html#code=aW5maXggKyA9IChhLCBiKSA9PiBfX2J1aWx0aW5fYWRkKGEsIGIpOwoKMiArIDIgPSA1OwpfX2J1aWx0aW5fcHJpbnQoMiArIDIpOwoKInBpZSIgPSAiY2FrZSI7Cl9fYnVpbHRpbl9wcmludCgicGllIik7Cg">Try it</a>
+            </div>
+            <div class="snippet"><pre><code><span class="tok-fix">infix</span> <span class="tok-op">+</span> <span class="tok-punct">=</span> <span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span> <span class="tok-punct">=&gt;</span> <span class="tok-builtin">__builtin_add</span><span class="tok-punct">(</span><span class="tok-name">a</span><span class="tok-punct">,</span> <span class="tok-name">b</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+
+<span class="tok-number">2</span> <span class="tok-op">+</span> <span class="tok-number">2</span> <span class="tok-punct">=</span> <span class="tok-number">5</span><span class="tok-punct">;</span>
+<span class="tok-builtin">__builtin_print</span><span class="tok-punct">(</span><span class="tok-number">2</span> <span class="tok-op">+</span> <span class="tok-number">2</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+
+<span class="tok-string">"pie"</span> <span class="tok-punct">=</span> <span class="tok-string">"cake"</span><span class="tok-punct">;</span>
+<span class="tok-builtin">__builtin_print</span><span class="tok-punct">(</span><span class="tok-string">"pie"</span><span class="tok-punct">)</span><span class="tok-punct">;</span></code></pre><div class="snippet-out">5
+cake</div></div>
+        </article>
+
+        <article class="idea">
+            <div>
+                <h3>Types are values</h3>
+                <p>Store types in variables, pass them to functions, and use plain values as types. Any function that returns a <code>Bool</code> can be a type, too.</p>
+                <a class="btn-small try" href="playground.html#code=U2l6ZSA9IHVuaW9uIHsgInNtYWxsIjsgImxhcmdlIjsgfTsKb3JkZXI6IFNpemUgPSAibGFyZ2UiOwoKRXZlbiA9IChuOiBJbnQpID0-IF9fYnVpbHRpbl9lcShfX2J1aWx0aW5fbW9kKG4sIDIpLCAwKTsKc2xpY2VzOiBFdmVuID0gODsKCl9fYnVpbHRpbl9wcmludChvcmRlciwgc2xpY2VzKTsK">Try it</a>
+            </div>
+            <div class="snippet"><pre><code><span class="tok-type">Size</span> <span class="tok-punct">=</span> <span class="tok-keyword">union</span> <span class="tok-punct">{</span> <span class="tok-string">"small"</span><span class="tok-punct">;</span> <span class="tok-string">"large"</span><span class="tok-punct">;</span> <span class="tok-punct">}</span><span class="tok-punct">;</span>
+<span class="tok-name">order</span><span class="tok-punct">:</span> <span class="tok-type">Size</span> <span class="tok-punct">=</span> <span class="tok-string">"large"</span><span class="tok-punct">;</span>
+
+<span class="tok-type">Even</span> <span class="tok-punct">=</span> <span class="tok-punct">(</span><span class="tok-name">n</span><span class="tok-punct">:</span> <span class="tok-type">Int</span><span class="tok-punct">)</span> <span class="tok-punct">=&gt;</span> <span class="tok-builtin">__builtin_eq</span><span class="tok-punct">(</span><span class="tok-builtin">__builtin_mod</span><span class="tok-punct">(</span><span class="tok-name">n</span><span class="tok-punct">,</span> <span class="tok-number">2</span><span class="tok-punct">)</span><span class="tok-punct">,</span> <span class="tok-number">0</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
+<span class="tok-name">slices</span><span class="tok-punct">:</span> <span class="tok-type">Even</span> <span class="tok-punct">=</span> <span class="tok-number">8</span><span class="tok-punct">;</span>
+
+<span class="tok-builtin">__builtin_print</span><span class="tok-punct">(</span><span class="tok-name">order</span><span class="tok-punct">,</span> <span class="tok-name">slices</span><span class="tok-punct">)</span><span class="tok-punct">;</span></code></pre><div class="snippet-out">large 8</div></div>
+        </article>
+    </section>
+
+    <div class="band">
+        <section class="section" aria-labelledby="install-title">
+            <!-- <h2 id="install-title">Get Pie on your computer</h2> -->
+            <h2 id="install-title">Get a piece of the Pie!</h2>
+            <!-- <p class="intro">The playground is enough to learn the language. Install it when you want to write real files.</p> -->
+            <p class="intro">Grab a build for Linux or macOS from the <a href="https://github.com/AliAlmutawaJr/Pie/releases">releases page</a>, or build from source:</p>
+            <ol class="steps">
+                <li>
+                    <h3>Download</h3>
+                    <p>Clone the source code:</p>
+<pre>git clone https://github.com/AliAlmutawaJr/Pie
+cd Pie && mkdir build && cd build
+cmake .. && make</pre>
+                </li>
+                <li>
+                    <h3>Write a file</h3>
+                    <p>Save this as <code>hello.pie</code>: </p>
+<pre>
+
+__builtin_print("Hello, Pie!");
+
+</pre>
+                </li>
+                <li>
+                    <h3>Run it</h3>
+                    <p>Invoke the <code>Pie</code> executable:</p>
+<pre>
+$ ./Pie hello.pie
+Hello, Pie!
+
+</pre>
+                </li>
+            </ol>
+        </section>
+    </div>
+</main>
+
+<footer class="site-footer">
+    <div class="inner">
         <div>
-          <h1 id="version-heading" style="text-align: center;" >
-            The Pie Programming Language
-            <span class="version-number">...</span>
-            <!-- <span class="version-beta">Beta</span> -->
-          </h1>
+            <h2>Pie</h2>
+            <p>A quirky and whimsical expression-based programming language</p>
+            <p><a href="https://discord.gg/4JQvGaQ3BB">Join the Discord</a></p>
         </div>
-        <p style="text-align: center;">an artistic interpreted programming language..!</p>
-        <div class="link__holder">
-          <a class="link github-link" href="https://github.com/AliAlmutawaJr/Pie/" target="_blank">
-            <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab"
-              data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg="">
-              <path fill="currentColor" d="M248 8C111 8 0 119 0 256c0 110 71 203 169 236
-                  12 2 16-5 16-11 0-5-1-22-1-44-69 15-83-33-83-33-11-28-27-35-27-35-22-15
-                  -1-15-1-15 24 2 37 22 37 22 21 37 55 26 69 20 2-16 8-27 15-33-56-6-115-14
-                  -115-114 0-27 7-41 23-59-3-6-12-33 3-68 21-6 68 26 68 26 20-5 41-8 62-8
-                  s42 3 62 8c0 0 47-32 68-26 15 35 6 62 3 68 16 18 23 32 23 59 0 100-59
-                  108-115 114 9 7 17 22 17 46 0 33-1 75-1 83 0 6 4 13 16 11 98-33 169-126
-                  169-236C496 119 385 8 248 8z"></path>
-            </svg>
-            <span>github.com/Pie</span>
-          </a>
-
-          <!-- <a class="link discord-link" href="https://discord.gg/JvExQpGuXM" target="_blank">
-            <svg class="svg-inline--fa fa-discord fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab"
-              data-icon="discord" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"
-              data-fa-i2svg="">
-              <path fill="currentColor" d="M 500 0C 224 0 0 224 0 500C 0 776 224 1000 500 1000C
-                  776 1000 1000 776 1000 500C 1000 224 776 0 500 0C 500 0 500 0 500 0 M 386 203C 387
-                  203 388 203 388 203C 388 203 395 212 395 212C 267 248 209 304 209 304C 209 304 224
-                  296 250 284C 326 250 386 241 411 239C 415 238 419 238 423 238C 466 232 515 231 566
-                  236C 633 244 705 264 779 304C 779 304 723 251 603 214C 603 214 612 203 612 203C 612
-                  203 709 201 811 277C 811 277 913 462 913 689C 913 689 853 792 697 797C 697 797 671
-                  767 650 740C 743 714 778 656 778 656C 749 675 721 688 697 697C 661 712 627 722 594
-                  728C 526 740 464 737 411 727C 371 719 336 708 307 697C 291 690 273 682 255 673C 253
-                  671 251 670 249 669C 248 668 247 668 246 667C 233 660 226 655 226 655C 226 655 260
-                  711 350 738C 329 765 303 797 303 797C 146 792 87 689 87 689C 87 462 189 277 189 277C
-                  284 206 375 203 386 203C 386 203 386 203 386 203M 368 467C 327 467 296 502 296 545C
-                  296 588 328 624 368 624C 408 624 440 588 440 545C 441 502 408 467 368 467C 368 467
-                  368 467 368 467M 626 467C 586 467 554 502 554 545C 554 588 586 624 626 624C 666 624
-                  698 588 698 545C 698 502 666 467 626 467C 626 467 626 467 626 467"></path>
-            </svg> -->
-            <!-- <span>discord.com/zura</span> -->
-          </a>
-        </div>
-      </div>
-
-      <div class="right-page">
-        <div class="codeBlockSwitcher">
-          <label for="codeSelector">Choose example:</label>
-          <select id="codeSelector" class="codeSelector">
-            <option value="Hello-There">Hello World!</option>
-            <!-- <option value="Variables-and-Types">Variables & Types</option> -->
-            <option value="Functions">Functions</option>
-            <!-- <option value="Control-Flow">Control Flow</option> -->
-            <option value="Classes">Classes</option>
-            <option value="Operators">Operators</option>
-            <option value="Overloading">Operator Overloading</option>
-            <option value="Quirks">Quirks...</option>
-          </select>
-
-          <!-- <pre class="code_block"><code id="codeOutput"></code></pre> -->
-          <div id="codeNote" class="code-note" aria-live="polite"></div>
-          <div class="code-block-wrapper">
-            <pre class="code_block"><code id="codeOutput"></code></pre>
-            <button class="copy-btn" id="copyCodeBtn" aria-label="Copy code">📋</button>
-          </div>
-
-        </div>
-
         <div>
-
+            <h2>Learn</h2>
+            <ul>
+                <li><a href="playground.html">Playground</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="spec.html">Specification (draft)</a></li>
+                <li><a href="https://github.com/AliAlmutawaJr/Pie/releases">Releases</a></li>
+            </ul>
         </div>
-      </div>
-
-      <footer class="footer">
-        <p>© 2025 Pie Programming Language. All rights reserved. Created by <a href="https://github.com/AliAlmutawaJr"
-            target="_blank" class="footer-link">Pie Team</a></p>
-      </footer>
+        <div class="overheard">
+            <h2>Overheard about Pie</h2>
+            <ul>
+                <li>“The whole language is a bug.”</li>
+                <li>“Can't have your Pie and eat it too!”</li>
+                <li>“Is this like Forth?”</li>
+                <li>“Better JS.”</li>
+            </ul>
+        </div>
+        <p class="fine">Pie is made by <a href="https://AliAlmutawaJr.com">Ali Almutawa Jr.</a> and <a href="https://github.com/AliAlmutawaJr/Pie/graphs/contributors">contributors</a>.</p>
+    </div>
+</footer>
 </body>
-
 </html>

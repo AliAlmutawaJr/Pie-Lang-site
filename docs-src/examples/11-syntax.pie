@@ -1,0 +1,20 @@
+.: Code as data
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+infix * = (a, b) => __builtin_mul(a, b);
+
+.: Backticks make Syntax: code that hasn't run yet.
+later = `price * 2`;
+price = 5;
+print(__builtin_eval(later));
+
+.: A backticked parameter receives its argument as Syntax.
+repeat = (n, `body`) => loop n __builtin_eval(body);
+repeat(3, print("pie!"));
+
+.: Print it to see the code itself.
+show = (`code`) => {
+    print(code);
+    __builtin_eval(code);
+};
+print(show(1 + 2 * 3));

@@ -1,0 +1,23 @@
+.: Types are values
+print = __builtin_print;
+infix > = (a, b) => __builtin_gt(a, b);
+infix < = (a, b) => __builtin_lt(a, b);
+infix | = (a, b) => union { a; b; };
+
+.: A type alias is just a variable.
+Number = union { Int; Double; };
+x: Number = 2.5;
+
+.: Values can be types, so unions make enums.
+Size = "small" | "medium" | "large";
+order: Size = "medium";
+print(order);
+
+.: A function returning Bool works as a type (a "concept").
+Positive = (n: Int) => n > 0;
+Digit = (n: Int) => n < 10;
+
+next = (n: Positive): Digit => __builtin_add(n, 1);
+print(next(5));
+
+.: Try next(9): the result breaks the return type.

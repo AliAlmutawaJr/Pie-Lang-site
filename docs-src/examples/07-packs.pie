@@ -1,0 +1,22 @@
+.: Packs and folds
+print = __builtin_print;
+infix + = (a, b) => __builtin_add(a, b);
+infix + = (a: String, b: String) => __builtin_concat(a, b);
+
+.: ...xs collects any number of arguments into a pack.
+sum = (...xs) => (0 + xs + ...);
+print(sum(1, 2, 3, 4, 5));
+print(sum());
+
+.: A separated fold puts a value between elements.
+join = (...words) => (words + ... + ", ");
+print(join("flour", "butter", "sugar"));
+
+.: Member access on a pack reaches into every element.
+Person = class { name = ""; age = 0; };
+names = (...people) => people.name;
+print(names(Person("Ali", 30), Person("Pie", 3)));
+
+.: Unpack every element of a list at once.
+{...{who, ages}} = {Person("Ali", 30), Person("Pie", 3)};
+print(ages);

@@ -1,0 +1,6 @@
+infix + = (a, b) => __builtin_add(a, b);
+infix * = (a, b) => __builtin_mul(a, b);
+exfix | : | = (x) => __builtin_abs(x);
+
+__builtin_print(1 + 2 * 3);
+__builtin_print(| __builtin_neg(7) |);
