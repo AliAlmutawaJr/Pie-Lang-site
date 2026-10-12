@@ -1,9 +1,5 @@
 # Pie documentation
 
-<!-- Pie is an interpreted language that leaves almost everything to you. There
-are no built-in operators, no `if`, and no `null`. Every piece of syntax is an
-expression. -->
-
 These docs go from your first line of Pie to the strange corners. Every example
 with a **Run** button opens in the playground, so you can poke at it.
 
@@ -98,19 +94,14 @@ of it.
 
 ### Comments
 
-```pie run
+```pie
 .: A line comment starts with a dot and a colon.
 
 .::
    A block comment can span
-   as many lines as you like.
+   starts with a dot and 2 colons
+   and ends with 2 colons and a dot
 ::.
-
-__builtin_print("comments are ignored");
-```
-
-```output
-comments are ignored
 ```
 
 ## Values
@@ -172,9 +163,7 @@ false
 
 Strings use double quotes and the usual escapes (`\n`, `\t`, `\"`, `\\`).
 Any `{expression}` inside a string is evaluated and spliced in, so every string
-is a format string. Escape a brace with `\{`. Keep the expressions inside
-braces short; for anything with commas, like a call with two arguments, store
-the result in a variable first.
+is a format string. Escape a brace with `\{`.
 
 ```pie run+
 name = "Pie";
@@ -967,7 +956,7 @@ closing the oven
 A class is a block of assignments after the `class` keyword. Every member must
 have a starting value. Calling the class constructs an object: arguments fill
 the members in order, and members without an argument keep their starting
-value. Arguments are positional.
+value.
 
 ```pie run+
 Pie = class {
