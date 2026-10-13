@@ -44,6 +44,44 @@
         }
     });
 
+    // ---- latest release ----------------------------------------------------
+    // Fills every [data-pie-version] (link: "Latest: v1.2.3") and
+    // [data-pie-version-text] (plain text: "v1.2.3") from GitHub's latest release.
+    // Cached for an hour per visitor; if GitHub can't be reached, nothing changes.
+    const RELEASES_API = "https://api.github.com/repos/AliAlmutawaJr/Pie/releases/latest";
+    const VERSION_KEY = "pie-latest-release";
+
+    async function latestRelease() {
+        try {
+            const cached = JSON.parse(sessionStorage.getItem(VERSION_KEY) || "null");
+            if (cached && Date.now() - cached.at < 3600e3) return cached;
+        } catch (_) { /* storage blocked */ }
+
+        const res = await fetch(RELEASES_API, { headers: { Accept: "application/vnd.github+json" } });
+        if (!res.ok) throw new Error("GitHub said " + res.status);
+        const data = await res.json();
+        // Tags look like "Release-1.11.1-…" or "v1.11.1": take the first x.y(.z).
+        const m = String(data.tag_name || "").match(/\d+(?:\.\d+)+/) || String(data.name || "").match(/\d+(?:\.\d+)+/);
+        if (!m) throw new Error("no version in " + data.tag_name);
+        const release = { version: "v" + m[0], url: data.html_url, at: Date.now() };
+        try { sessionStorage.setItem(VERSION_KEY, JSON.stringify(release)); } catch (_) {}
+        return release;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const links = document.querySelectorAll("[data-pie-version]");
+        const texts = document.querySelectorAll("[data-pie-version-text]");
+        if (!links.length && !texts.length) return;
+        latestRelease().then(({ version, url }) => {
+            for (const a of links) {
+                a.textContent = "Latest: " + version;
+                if (url) a.href = url;
+                a.hidden = false;
+            }
+            for (const t of texts) t.textContent = version;
+        }).catch(() => { /* leave the page as it is */ });
+    });
+
     // Playground links carry code in the URL hash, base64url-encoded UTF-8.
     window.PieShare = {
         encode(code) {

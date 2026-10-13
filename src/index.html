@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-{{> head title="Pie, a programming language you finish yourself" description="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser."}}
+{{> head title="Pie" description="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser."}}
 <script src="assets/js/pie-highlight.js" defer></script>
 <script src="assets/js/examples.js" defer></script>
 <script src="assets/js/pie-runner.js" defer></script>
@@ -15,9 +15,10 @@
         <div class="inner">
             <div>
                 {{> hero-mark}}
-                <h1 id="hero-title">Pie</h1>
-                <!-- <p class="lede">Even <code class="op-cycle" aria-hidden="true"><span>+</span></code><span class="visually-hidden">+</span> is yours to define.</p> -->
-                <!-- <br/> -->
+                <div class="hero-title-row">
+                    <h1 id="hero-title">Pie</h1>
+                    <a class="version-pill" data-pie-version href="https://github.com/AliAlmutawaJr/Pie/releases/latest" hidden></a>
+                </div>
                 <p class="lede">Where even <code class="op-cycle" aria-hidden="true"><span>+</span></code><span class="visually-hidden">+</span> is yours to define.</p>
                 <div class="actions">
                     <a class="btn btn-primary" href="playground.html">
@@ -95,7 +96,7 @@
             <!-- <h2 id="install-title">Get Pie on your computer</h2> -->
             <h2 id="install-title">Get a piece of the Pie!</h2>
             <!-- <p class="intro">The playground is enough to learn the language. Install it when you want to write real files.</p> -->
-            <p class="intro">Grab a build for Linux or macOS from the <a href="https://github.com/AliAlmutawaJr/Pie/releases">releases page</a>, or build from source:</p>
+            <p class="intro">Grab <span data-pie-version-text>a build</span> for Linux or macOS from the <a href="https://github.com/AliAlmutawaJr/Pie/releases">releases page</a>, or build from source:</p>
             <ol class="steps">
                 <li>
                     <h3>Download</h3>
