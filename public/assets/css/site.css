@@ -1077,3 +1077,61 @@ body.playground-page { height: 100vh; height: 100dvh; min-height: 0; overflow: h
     display: none;
 }
 .pie-editor.pe-escaped .pe-hint { display: block; }
+
+
+/* ---------------------------------------------------------------- video
+   A thumbnail that turns into the YouTube player when clicked (assets/js/video.js).
+   Nothing from YouTube loads until then; without JavaScript it's a plain link. */
+.watch { padding-bottom: 24px; }
+.video {
+    position: relative;
+    display: block;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    border: 3px solid var(--outline);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: var(--console-bg);
+    text-decoration: none;
+}
+.video img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+.video-play {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px 12px 16px;
+    border: 3px solid var(--outline);
+    border-radius: 999px;
+    background: var(--band-btn-bg);
+    color: var(--band-btn-ink);
+    box-shadow: 4px 4px 0 var(--band-btn-shadow);
+    font: 800 18px/1 var(--font-body);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.video-play svg { width: 20px; height: 20px; }
+.video-len { opacity: 0.75; font-weight: 700; }
+.video:hover img { transform: scale(1.02); }
+.video:hover .video-play { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--band-btn-shadow); }
+.video:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 600px) {
+    .video { border-radius: 14px; }
+    /* top-right is empty space in the thumbnail; bottom-left would cover the output */
+    .video-play { left: auto; bottom: auto; right: 8px; top: 8px; padding: 6px 12px 6px 10px; font-size: 14px; gap: 7px; border-width: 2px; box-shadow: 3px 3px 0 var(--band-btn-shadow); }
+    .video-play svg { width: 16px; height: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .video img, .video-play { transition: none; }
+    .video:hover img { transform: none; }
+}
+

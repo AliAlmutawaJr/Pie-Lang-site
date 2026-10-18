@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-{{> head title="Pie" description="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser."}}
-<script src="assets/js/pie-highlight.js" defer></script>
-<script src="assets/js/examples.js" defer></script>
-<script src="assets/js/pie-runner.js" defer></script>
-<script src="assets/js/home.js" defer></script>
+    {{> head title="Pie" description="Pie is an expression-only programming language. It has no built-in operators: you define +, if, and everything else yourself. Try it in your browser."}}
+
+    <script src="assets/js/pie-highlight.js" defer></script>
+    <script src="assets/js/examples.js" defer></script>
+    <script src="assets/js/pie-runner.js" defer></script>
+    <script src="assets/js/home.js" defer></script>
+    <script src="assets/js/video.js" defer></script>
 </head>
 <body>
 {{> nav}}
@@ -46,6 +48,18 @@
                 <pre class="oven-out" id="oven-out" aria-live="polite" aria-label="Output"></pre>
             </div>
         </div>
+    </section>
+
+    <section class="section watch" aria-labelledby="watch-title">
+        <h2 id="watch-title">Pie in a minute</h2>
+        <!-- <p class="intro">Operators you write yourself, an <code>if</code> that's just an operator, and how <code>2 + 2</code> can be <code>5</code>.</p> -->
+        <a class="video" href="https://www.youtube.com/watch?v=QXopIRFrikI" data-youtube-id="QXopIRFrikI" data-title="Pie in a minute">
+            <img src="assets/img/promo-thumb.jpg" alt="Thumbnail: 2 + 2 = 5 running in Pie" width="1920" height="1080" loading="lazy" decoding="async">
+            <span class="video-play">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>
+                Watch <span class="video-len">0:58</span>
+            </span>
+        </a>
     </section>
 
     <section class="section" aria-labelledby="ideas-title">
