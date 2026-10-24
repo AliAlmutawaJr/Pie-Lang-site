@@ -222,6 +222,47 @@ print(__builtin_len(stock));
 Maps don't keep insertion order, so printing a whole map can list its pairs in
 any order.
 
+### Tuples
+
+A tuple is a comma-separated sequence in parentheses. Where a list is a row of
+things of the same kind, a tuple is a few things that belong together, like a
+point's `x` and `y`.
+
+```pie run+
+point = (3, 4);
+print(point);
+print(__builtin_len(point));
+print(__builtin_get(point, 0));
+
+print((5,));
+print(());
+```
+
+```output
+(3, 4)
+2
+3
+(5,)
+()
+```
+
+A one-element tuple needs a trailing comma, because `(5)` is just `5` in
+parentheses. `()` is the empty tuple. Pie uses it as its *unit*: the value
+that means "nothing to report".
+
+Tuples compare element by element, so they make good map keys:
+
+```pie run+
+grid = {(0, 0): "origin", (1, 0): "east"};
+print(__builtin_get(grid, (1, 0)));
+print((1, 2) == (1, 2));
+```
+
+```output
+east
+true
+```
+
 ### Blocks
 
 A block is a list of expressions in braces. It runs them in order and becomes
@@ -808,7 +849,7 @@ There is one loop keyword, `loop`. What it does depends on what you give it.
 | --- | --- |
 | an `Int` `n` | `n` times, counting from `0` |
 | a `Bool` | while the condition is `true` |
-| a list, string or pack | once per element |
+| a list, tuple, string or pack | once per element |
 | an object | once per value from its `next()` |
 | nothing | forever, until `break` |
 
@@ -1086,6 +1127,7 @@ Hello, Ali!
 | `Any` | Anything at all |
 | `Type` | Types themselves |
 | `Syntax` | Unevaluated code (see [Syntax and eval](#syntax-and-eval)) |
+| `()` | The empty tuple, Pie's unit |
 
 ### Compound types
 
@@ -1093,18 +1135,77 @@ Hello, Ali!
 | --- | --- |
 | `{T}` | A list of `T` |
 | `{K: V}` | A map from `K` to `V` |
-| `(A, B): R` | A function from `A` and `B` to `R` |
+| `(A, B)` | A tuple of an `A` and a `B` (`(A,)` has one element) |
+| `(A, B) => R` | A function from `A` and `B` to `R` |
 | `...T` | A pack of `T` |
 
 ```pie run+
 names: {String} = {"Ali", "Pie"};
 ages: {String: Int} = {"Ali": 30};
-twice: (Int): Int = (x: Int): Int => x * 2;
+origin: (Int, Int) = (0, 0);
+twice: (Int) => Int = (x: Int): Int => x * 2;
 print(twice(21));
 ```
 
 ```output
 42
+```
+
+A function type looks like a function written with types: parameter types in
+parentheses, `=>`, then the result type. After a `:`, `(...) =>` always means
+a function type. To use a function itself as a type there (a
+[concept](#concepts)), wrap it in parentheses: `x: ((n) => n > 0) = 5;`.
+
+### Tuple types
+
+A tuple type lists a type for each position.
+
+```pie run+
+pair: (String, Int) = ("Pie", 3);
+print(pair);
+print(__builtin_type((1, "a", true)));
+```
+
+```output
+(Pie, 3)
+(Int, String, Bool)
+```
+
+```pie error
+pair: (Int, Int) = (1, "two");
+```
+
+A tuple can be given to a shorter tuple type. Only the first elements are kept:
+
+```pie run+
+full = (1, true, 3.14);
+short: (Int, Bool) = full;
+print(short);
+```
+
+```output
+(1, true)
+```
+
+```pie error
+pair: (Int, Int) = (1,);
+```
+
+Tuple types work anywhere a type does, including results and
+[concepts](#concepts):
+
+```pie run+
+divide = (a: Int, b: Int): (Int, Int) => (a / b, a % b);
+print(divide(17, 5));
+
+Positive = (n: Int) => n > 0;
+corner: (Positive, Positive) = (3, 4);
+print(corner);
+```
+
+```output
+(3, 2)
+(3, 4)
 ```
 
 ### Types are values
@@ -1128,14 +1229,16 @@ Some types, like function types, don't look like expressions. Put a `:` in
 front of them to write them where an expression is expected.
 
 ```pie run+
-IntToBool = :(Int): Bool;
+IntToBool = :(Int) => Bool;
 isBig: IntToBool = (n: Int): Bool => n > 100;
 print(IntToBool);
 ```
 
 ```output
-(Int): Bool
+(Int) => Bool
 ```
+
+Without the `:`, `(Int) => Bool` is a function with a parameter named `Int`.
 
 Since types are values, a parameter's type can depend on an earlier parameter:
 
@@ -1254,7 +1357,17 @@ print("{who} is {years}");
 Ali is 30
 ```
 
-Object members are matched by position, not by name.
+Object members are matched by position, not by name. Tuples unpack the same
+way:
+
+```pie run+
+{x, y} = (3, 4);
+print(x + y);
+```
+
+```output
+7
+```
 
 ### Collecting the rest
 
@@ -1720,8 +1833,8 @@ These are always available. Many accept named arguments.
 
 | Function | What it does |
 | --- | --- |
-| `__builtin_len(x)` | Length of a string, list, map or pack |
-| `__builtin_get(x, i)` | Element `i` (or key `i` of a map) |
+| `__builtin_len(x)` | Length of a string, list, tuple, map or pack |
+| `__builtin_get(x, i)` | Element `i` of a list, tuple or pack (or key `i` of a map) |
 | `__builtin_set(x, i, v)` | Sets an element or map key |
 | `__builtin_push(list, v)` | Adds to the end |
 | `__builtin_pop(list)` | Removes and returns the last element |
