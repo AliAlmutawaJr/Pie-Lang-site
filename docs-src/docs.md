@@ -478,8 +478,9 @@ area(3, "four");
 
 ### Named arguments
 
-Any argument can be passed by name, in any order, and mixed with positional
-ones.
+Arguments can be passed by name, in any order, and mixed with positional
+ones. (Unless the parameter is
+[positional-only](#positional-only-and-keyword-only-parameters).)
 
 ```pie run+
 describe = (name, food, count) => print("{name} ate {count} {food}");
@@ -555,6 +556,72 @@ print(forward(1, 2, 3));
 
 Packs get their own chapter: [Packs and folds](#packs-and-folds).
 
+### Positional-only and keyword-only parameters
+
+A `;` in a parameter list is a wall between "by position" and "by name".
+Everything before it is *positional-only*, and everything after it is
+*keyword-only*.
+
+```pie run+
+point = (x, y;) => print(x, y);
+point(1, 2);
+
+greet = (; name, greeting = "Hello") => print("{greeting}, {name}!");
+greet(name = "Pie");
+greet(greeting = "Hi", name = "Ali");
+```
+
+```output
+1 2
+Hello, Pie!
+Hi, Ali!
+```
+
+With two walls, the parameters in the middle can be passed either way:
+
+```pie run+
+bake = (flavor; size, slices = 8; hot = false) => print("{flavor} {size} {slices} {hot}");
+bake("apple", "large");
+bake("cherry", slices = 6, size = "small", hot = true);
+```
+
+```output
+apple large 8 false
+cherry small 6 true
+```
+
+| You write | Positional-only | Either | Keyword-only |
+| --- | --- | --- | --- |
+| `(a, b)` | | `a`, `b` | |
+| `(a, b;)` | `a`, `b` | | |
+| `(; a, b)` | | | `a`, `b` |
+| `(a; b)` | `a` | | `b` |
+| `(a; b;)` | `a` | `b` | |
+| `(; a; b)` | | `a` | `b` |
+| `(a; b; c)` | `a` | `b` | `c` |
+
+Keyword-only parameters are what make options after a pack work. Without the
+`;`, `end` would take the last word instead:
+
+```pie run+
+shout = (...words; end = "!") => print((words + ... + " ") + end);
+shout("pie", "is", "great");
+shout("really", end = "?");
+```
+
+```output
+pie is great!
+really?
+```
+
+Keyword-only defaults can come in any order, since they're never filled by
+position: `(; mode = "fast", target)` is fine.
+
+```pie error+
+point = (x, y;) => print(x, y);
+point(x = 1, y = 2);
+```
+
 ### Currying
 
 Call a function with fewer arguments than it needs and you get back a function
@@ -570,6 +637,18 @@ print(add(1)(2));
 ```output
 15
 3
+```
+
+A missing keyword-only argument curries too:
+
+```pie run+
+greet = (; name, greeting = "Hello") => print("{greeting}, {name}!");
+welcome = greet(greeting = "Welcome");
+welcome(name = "Ali");
+```
+
+```output
+Welcome, Ali!
 ```
 
 ### Calling right away
@@ -1136,14 +1215,14 @@ Hello, Ali!
 | `{T}` | A list of `T` |
 | `{K: V}` | A map from `K` to `V` |
 | `(A, B)` | A tuple of an `A` and a `B` (`(A,)` has one element) |
-| `(A, B) => R` | A function from `A` and `B` to `R` |
+| `(A, B) -> R` | A function from `A` and `B` to `R` |
 | `...T` | A pack of `T` |
 
 ```pie run+
 names: {String} = {"Ali", "Pie"};
 ages: {String: Int} = {"Ali": 30};
 origin: (Int, Int) = (0, 0);
-twice: (Int) => Int = (x: Int): Int => x * 2;
+twice: (Int) -> Int = (x: Int): Int => x * 2;
 print(twice(21));
 ```
 
@@ -1151,10 +1230,50 @@ print(twice(21));
 42
 ```
 
-A function type looks like a function written with types: parameter types in
-parentheses, `=>`, then the result type. After a `:`, `(...) =>` always means
-a function type. To use a function itself as a type there (a
-[concept](#concepts)), wrap it in parentheses: `x: ((n) => n > 0) = 5;`.
+A function type is the parameter types in parentheses, `->`, then the result
+type. `=>` always makes a function and `->` always makes a function type. To
+use a function itself as a type (a [concept](#concepts)), wrap it in
+parentheses so its body stops before the `=`: `x: ((n) => n > 0) = 5;`.
+
+### Function types
+
+Function types have the same walls as parameter lists. Keyword-only entries
+need a name, because that's how they're passed. Names anywhere else are
+allowed, but only for the reader: `(width: Int, height: Int) -> Int` is the
+same type as `(Int, Int) -> Int`.
+
+```pie run+
+Greeter = (String; times: Int) -> Any;
+print(Greeter);
+print(__builtin_type((a; b; c) => 0));
+```
+
+```output
+(String; times: Int) -> Any
+(Any; Any; c: Any) -> Any
+```
+
+A function fits a function type when it accepts every call the type allows:
+
+- Positional-only and either are the same in a type, since a type has no
+  names to pass them by.
+- Extra parameters are fine, as long as they have defaults.
+- Keyword-only parameters are matched by name, in any order.
+
+```pie run+
+Draw = (Int; color: String) -> Any;
+d: Draw = (size: Int, outline = false; alpha = 1.0, color: String) => print("{size} {color}");
+d(3, color = "red");
+```
+
+```output
+3 red
+```
+
+```pie error
+Draw = (Int; color: String) -> Any;
+d: Draw = (size: Int; colour: String) => 0;
+```
 
 ### Tuple types
 
@@ -1225,20 +1344,31 @@ Int
 Int
 ```
 
-Some types, like function types, don't look like expressions. Put a `:` in
-front of them to write them where an expression is expected.
+Some types don't look like expressions. Put a `:` in front of them to write
+them where an expression is expected.
 
 ```pie run+
-IntToBool = :(Int) => Bool;
+Pair = :(Int, Int);
+p: Pair = (1, 2);
+print(Pair);
+```
+
+```output
+(Int, Int)
+```
+
+Without the `:`, `(Int, Int)` is a tuple holding two types. Function types
+never need it, since `( ... ) ->` is always a function type:
+
+```pie run+
+IntToBool = (Int) -> Bool;
 isBig: IntToBool = (n: Int): Bool => n > 100;
 print(IntToBool);
 ```
 
 ```output
-(Int) => Bool
+(Int) -> Bool
 ```
-
-Without the `:`, `(Int) => Bool` is a function with a parameter named `Int`.
 
 Since types are values, a parameter's type can depend on an earlier parameter:
 
@@ -1886,7 +2016,10 @@ name you define.
 
 ### Reserved punctuation
 
-`(` `)` `{` `}` `,` `;` `:` `::` `=` `:=` `=>` `.` `..` `...` and backticks.
+`(` `)` `{` `}` `,` `;` `:` `::` `=` `:=` `=>` `->` `.` `..` `...` and backticks.
+
+Only the exact token is reserved: `-->`, `->>` and `<->` are still names you
+can use for operators.
 
 ### Installing
 
