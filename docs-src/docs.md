@@ -1844,15 +1844,15 @@ value with the same shape. Inside it, `$name` is a *hole*: it matches any
 code, and the case gets that code as `Syntax` under `name`.
 
 ```pie run+
-describe = (`code`) => match code {
+describe = (code) => match code {
     `$a + $b` => print("adding", a, "and", b);
     `$a * $b` => print("multiplying", a, "and", b);
     _         => print("something else");
 };
 
-describe(1 + 2);
-describe(3 * 4);
-describe(- 5);
+describe(`1 + 2`);
+describe(`3 * 4`);
+describe(`- 5`);
 ```
 
 ```output
@@ -1874,13 +1874,12 @@ names, the same number of arguments. Using the same hole twice means "the same
 code both times":
 
 ```pie run+
-x = 1; y = 2;
-double = (`code`) => match code {
+double = (code) => match code {
     `$a + $a` => "doubles it";
     _         => "doesn't";
 };
-print(double(x + x));
-print(double(x + y));
+print(double(`x + x`));
+print(double(`x + y`));
 ```
 
 ```output
@@ -1893,14 +1892,14 @@ Names without a `$` match only themselves. That includes parameters, so
 `($p) => $body` matches a function with one parameter of any name:
 
 ```pie run+
-kind = (`code`) => match code {
+kind = (code) => match code {
     `($p) => $p + 1` => "adds one to its parameter";
     `(x) => $body`   => "takes exactly x";
     _                => "other";
 };
-print(kind((n) => n + 1));
-print(kind((x) => 0));
-print(kind((y) => 0));
+print(kind(`(n) => n + 1`));
+print(kind(`(x) => 0`));
+print(kind(`(y) => 0`));
 ```
 
 ```output
@@ -1919,15 +1918,14 @@ A hole can have any name Pie allows, including the improper ones from
 Plain values in a pattern have to be exactly the same too:
 
 ```pie run+
-kind = (`code`) => match code {
-    `$a + 0`   => "adds zero";
-    `f($arg)`  => "calls f";
-    _          => "other";
+kind = (code) => match code {
+    `$a + 0`  => "adds zero";
+    `f($arg)` => "calls f";
+    _         => "other";
 };
-f = (n) => n; g = (n) => n;
-print(kind(5 + 0));
-print(kind(f(5)));
-print(kind(g(5)));
+print(kind(`5 + 0`));
+print(kind(`f(5)`));
+print(kind(`g(5)`));
 ```
 
 ```output
@@ -1936,10 +1934,6 @@ calls f
 other
 ```
 
-> The argument of a syntax parameter is still checked before it's passed, so
-> every name in it has to exist. That's why `g` is defined above, even though
-> it's never called.
-
 ### Pack holes
 
 `$...name` matches *any number* of things in a row: arguments, list or tuple
@@ -1947,15 +1941,14 @@ elements, or the lines of a block. The case gets them as a pack of `Syntax`,
 just like a `...name` parameter:
 
 ```pie run+
-f = (...xs) => 0;
-shape = (`code`) => match code {
+shape = (code) => match code {
     `f()`                        => "no arguments";
     `f($only)`                   => "one argument";
     `f($first, $...rest, $last)` => "{__builtin_len({rest...})} in the middle";
 };
-print(shape(f()));
-print(shape(f(9)));
-print(shape(f(1, 2, 3, 4)));
+print(shape(`f()`));
+print(shape(`f(9)`));
+print(shape(`f(1, 2, 3, 4)`));
 ```
 
 ```output
@@ -1968,13 +1961,12 @@ A list of things can have several pack holes only if they all have the same
 name. Then each one has to match the same things:
 
 ```pie run+
-f = (...xs) => 0;
-mirrored = (`code`) => match code {
+mirrored = (code) => match code {
     `f($...a, 0, $...a)` => "mirrored";
     _                    => "not mirrored";
 };
-print(mirrored(f(1, 2, 0, 1, 2)));
-print(mirrored(f(1, 2, 0, 2, 1)));
+print(mirrored(`f(1, 2, 0, 1, 2)`));
+print(mirrored(`f(1, 2, 0, 2, 1)`));
 ```
 
 ```output
@@ -1986,10 +1978,10 @@ Pack holes can have improper names too (`$...{1 + 2}`), and `$..._` is a
 common way to say "and whatever else":
 
 ```pie run+
-first = (`code`) => match code {
+first = (code) => match code {
     `{$head, $..._}` => head;
 };
-print(first({1, 2, 3}));
+print(first(`{1, 2, 3}`));
 ```
 
 ```output
@@ -2013,10 +2005,10 @@ a pattern and in a literal, so what you take apart in one case, you can put
 back together in its body:
 
 ```pie run+
-swap = (`code`) => match code {
+swap = (code) => match code {
     `$a + $b` => `$b + $a`;
 };
-print(swap(1 + 2 * 3));
+print(swap(`1 + 2 * 3`));
 ```
 
 ```output
@@ -2051,9 +2043,8 @@ Syntax {
 That's enough to build working functions out of pieces:
 
 ```pie run+
-v = 0;
-make = (`param`, `body`) => `($param) => $body`;
-inc = __builtin_eval(make(v, v + 1));
+make = (param, body) => `($param) => $body`;
+inc = __builtin_eval(make(`v`, `v + 1`));
 print(inc(41));
 ```
 
@@ -2064,14 +2055,14 @@ print(inc(41));
 or to rewrite code:
 
 ```pie run+
-simplify = (`code`) => match code {
+simplify = (code) => match code {
     `$a * 1` => a;
     `1 * $a` => a;
     other    => other;
 };
 y = 7;
-print(simplify(y * 1));
-print(__builtin_eval(simplify(1 * y)));
+print(simplify(`y * 1`));
+print(__builtin_eval(simplify(`1 * y`)));
 ```
 
 ```output
@@ -2084,13 +2075,13 @@ Syntax {
 `$...name` splices every element of a pack or a list, each in its own place:
 
 ```pie run+
-reverse = (`code`) => match code {
+reverse = (code) => match code {
     `$func($...args)` => {
         backwards = __builtin_reverse({args...});
         `$func($...backwards)`;
     };
 };
-code = reverse(print(1, 2, 3));
+code = reverse(`print(1, 2, 3)`);
 print(code);
 __builtin_eval(code);
 ```
