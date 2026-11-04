@@ -250,6 +250,21 @@ A one-element tuple needs a trailing comma, because `(5)` is just `5` in
 parentheses. `()` is the empty tuple. Pie uses it as its *unit*: the value
 that means "nothing to report".
 
+A [pack](#packs) can be spread into a tuple with a trailing `...`. A pack on its
+own needs the trailing comma too: `(xs...,)`.
+
+```pie run+
+wrap = (...xs) => (0, xs..., 9);
+print(wrap(1, 2));
+just = (...xs) => (xs...,);
+print(just(1, 2));
+```
+
+```output
+(0, 1, 2, 9)
+(1, 2)
+```
+
 Tuples compare element by element, so they make good map keys:
 
 ```pie run+
@@ -1690,7 +1705,7 @@ show("flour", "butter", "sugar");
 - sugar
 ```
 
-Spread a pack with a trailing `...` inside calls or lists:
+Spread a pack with a trailing `...` inside calls, lists or tuples:
 
 ```pie run+
 both = (...xs) => {xs..., xs...};
@@ -1821,6 +1836,325 @@ Syntax {
     (1 + (2 * 3))
 }
 ```
+
+### Matching code
+
+A `match` case can be a piece of code in backticks. It matches a `Syntax`
+value with the same shape. Inside it, `$name` is a *hole*: it matches any
+code, and the case gets that code as `Syntax` under `name`.
+
+```pie run+
+describe = (`code`) => match code {
+    `$a + $b` => print("adding", a, "and", b);
+    `$a * $b` => print("multiplying", a, "and", b);
+    _         => print("something else");
+};
+
+describe(1 + 2);
+describe(3 * 4);
+describe(- 5);
+```
+
+```output
+adding Syntax {
+    1
+} and Syntax {
+    2
+}
+multiplying Syntax {
+    3
+} and Syntax {
+    4
+}
+something else
+```
+
+Everything outside the holes has to be the same: the same operators, the same
+names, the same number of arguments. Using the same hole twice means "the same
+code both times":
+
+```pie run+
+x = 1; y = 2;
+double = (`code`) => match code {
+    `$a + $a` => "doubles it";
+    _         => "doesn't";
+};
+print(double(x + x));
+print(double(x + y));
+```
+
+```output
+doubles it
+doesn't
+```
+
+Names without a `$` match only themselves. That includes parameters, so
+`(x) => $body` matches a function whose parameter is called `x`, while
+`($p) => $body` matches a function with one parameter of any name:
+
+```pie run+
+kind = (`code`) => match code {
+    `($p) => $p + 1` => "adds one to its parameter";
+    `(x) => $body`   => "takes exactly x";
+    _                => "other";
+};
+print(kind((n) => n + 1));
+print(kind((x) => 0));
+print(kind((y) => 0));
+```
+
+```output
+adds one to its parameter
+takes exactly x
+other
+```
+
+Code patterns work everywhere code can go: calls, operators, functions,
+assignments, loops, comprehensions, classes, blocks, and even `match`
+expressions and their own patterns.
+
+A hole can have any name Pie allows, including the improper ones from
+[Assign to anything](#assign-to-anything). Write those in braces: `${1 + 2}`.
+
+Plain values in a pattern have to be exactly the same too:
+
+```pie run+
+kind = (`code`) => match code {
+    `$a + 0`   => "adds zero";
+    `f($arg)`  => "calls f";
+    _          => "other";
+};
+f = (n) => n; g = (n) => n;
+print(kind(5 + 0));
+print(kind(f(5)));
+print(kind(g(5)));
+```
+
+```output
+adds zero
+calls f
+other
+```
+
+> The argument of a syntax parameter is still checked before it's passed, so
+> every name in it has to exist. That's why `g` is defined above, even though
+> it's never called.
+
+### Pack holes
+
+`$...name` matches *any number* of things in a row: arguments, list or tuple
+elements, or the lines of a block. The case gets them as a pack of `Syntax`,
+just like a `...name` parameter:
+
+```pie run+
+f = (...xs) => 0;
+shape = (`code`) => match code {
+    `f()`                        => "no arguments";
+    `f($only)`                   => "one argument";
+    `f($first, $...rest, $last)` => "{__builtin_len({rest...})} in the middle";
+};
+print(shape(f()));
+print(shape(f(9)));
+print(shape(f(1, 2, 3, 4)));
+```
+
+```output
+no arguments
+one argument
+2 in the middle
+```
+
+A list of things can have several pack holes only if they all have the same
+name. Then each one has to match the same things:
+
+```pie run+
+f = (...xs) => 0;
+mirrored = (`code`) => match code {
+    `f($...a, 0, $...a)` => "mirrored";
+    _                    => "not mirrored";
+};
+print(mirrored(f(1, 2, 0, 1, 2)));
+print(mirrored(f(1, 2, 0, 2, 1)));
+```
+
+```output
+mirrored
+not mirrored
+```
+
+Pack holes can have improper names too (`$...{1 + 2}`), and `$..._` is a
+common way to say "and whatever else":
+
+```pie run+
+first = (`code`) => match code {
+    `{$head, $..._}` => head;
+};
+print(first({1, 2, 3}));
+```
+
+```output
+Syntax {
+    1
+}
+```
+
+```pie error+
+match `f(1, 2)` { `f($...a, $...b)` => 0; };
+```
+
+Two different pack holes in one list could split the arguments in more than one
+way, so that's an error.
+
+### Splicing
+
+Holes work in syntax literals too. When the literal runs, each hole is filled
+in, so you can build new code out of old code. A hole means the same thing in
+a pattern and in a literal, so what you take apart in one case, you can put
+back together in its body:
+
+```pie run+
+swap = (`code`) => match code {
+    `$a + $b` => `$b + $a`;
+};
+print(swap(1 + 2 * 3));
+```
+
+```output
+Syntax {
+    ((2 * 3) + 1)
+}
+```
+
+A hole is filled with whatever its name holds. Code goes in as it is.
+Numbers, strings and booleans go in as the code that writes them. A hole with
+an improper name, like `${n * 2}`, is filled with whatever that expression
+gives:
+
+```pie run+
+n = 10;
+name = "Pie";
+print(`greet($name, $n * 2)`);
+print(`${n * 2} + 1`);
+print(__builtin_eval(`${n * 2} + 1`));
+```
+
+```output
+Syntax {
+    greet("Pie", (10 * 2))
+}
+Syntax {
+    (20 + 1)
+}
+21
+```
+
+That's enough to build working functions out of pieces:
+
+```pie run+
+v = 0;
+make = (`param`, `body`) => `($param) => $body`;
+inc = __builtin_eval(make(v, v + 1));
+print(inc(41));
+```
+
+```output
+42
+```
+
+or to rewrite code:
+
+```pie run+
+simplify = (`code`) => match code {
+    `$a * 1` => a;
+    `1 * $a` => a;
+    other    => other;
+};
+y = 7;
+print(simplify(y * 1));
+print(__builtin_eval(simplify(1 * y)));
+```
+
+```output
+Syntax {
+    y
+}
+7
+```
+
+`$...name` splices every element of a pack or a list, each in its own place:
+
+```pie run+
+reverse = (`code`) => match code {
+    `$func($...args)` => {
+        backwards = __builtin_reverse({args...});
+        `$func($...backwards)`;
+    };
+};
+code = reverse(print(1, 2, 3));
+print(code);
+__builtin_eval(code);
+```
+
+```output
+Syntax {
+    print(3, 2, 1)
+}
+3 2 1
+```
+
+Values that can't be written as code, like functions and objects, can't fill a
+hole:
+
+```pie error+
+g = (x) => x;
+`f($g)`;
+```
+
+### Writing `$` in code
+
+Inside backticks, `$` always starts a hole. To write a name or an operator
+that starts with `$`, write one extra `$`:
+
+```pie run+
+$total = 10;
+n = 5;
+code = `$$total + $n`;
+print(code);
+print(__builtin_eval(code));
+```
+
+```output
+Syntax {
+    ($total + 5)
+}
+15
+```
+
+```pie run+
+prefix(LOW +) $ = (x) => x * 100;
+print($ 3);
+match `$$ 3` {
+    `$$ $amount` => print("dollars:", amount);
+};
+```
+
+```output
+300
+dollars: Syntax {
+    3
+}
+```
+
+| In backticks | Means |
+| --- | --- |
+| `$name` | a hole called `name` (any name works, even `$+` or `$1`) |
+| `${1 + 2}` | a hole with an improper name |
+| `$...name`, `$...{1 + 2}` | a pack hole |
+| `$$name` | the name `$name` |
+| `$$` | the name (or operator) `$` |
+
+A `$` on its own, followed by anything else, is an error. Outside backticks,
+`$` is an ordinary character in names.
 
 ## Namespaces and modules
 
@@ -2020,6 +2354,9 @@ name you define.
 
 Only the exact token is reserved: `-->`, `->>` and `<->` are still names you
 can use for operators.
+
+Inside backticks, `$` starts a [hole](#matching-code). Everywhere else it's a
+normal name character.
 
 ### Installing
 
