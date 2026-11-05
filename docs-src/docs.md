@@ -250,32 +250,15 @@ A one-element tuple needs a trailing comma, because `(5)` is just `5` in
 parentheses. `()` is the empty tuple. Pie uses it as its *unit*: the value
 that means "nothing to report".
 
-A [pack](#packs) can be spread into a tuple with a trailing `...`. A pack on its
-own needs the trailing comma too: `(xs...,)`.
+A [pack](#packs) can be spread into a tuple with a trailing `...`:
 
 ```pie run+
 wrap = (...xs) => (0, xs..., 9);
 print(wrap(1, 2));
-just = (...xs) => (xs...,);
-print(just(1, 2));
 ```
 
 ```output
 (0, 1, 2, 9)
-(1, 2)
-```
-
-Tuples compare element by element, so they make good map keys:
-
-```pie run+
-grid = {(0, 0): "origin", (1, 0): "east"};
-print(__builtin_get(grid, (1, 0)));
-print((1, 2) == (1, 2));
-```
-
-```output
-east
-true
 ```
 
 ### Blocks
@@ -431,21 +414,6 @@ print("Hello");
 Goodbye
 ```
 
-Like any other variable, the change only lasts until the end of the block.
-
-```pie run+
-{
-    1 = 100;
-    print(1);
-};
-print(1);
-```
-
-```output
-100
-1
-```
-
 Only plain names can have a type annotation. `1: Int = 5;` is an error.
 
 ## Functions
@@ -513,24 +481,17 @@ Sam ate 9 muffins
 
 ### Default values
 
-Parameters can have default values. A default can use the parameters before
-it.
+Parameters can have default values.
 
 ```pie run+
 slice = (size, count = 8) => print("{count} slices of {size}");
 slice("large");
 slice("small", 4);
-
-pair = (a, b = a) => print(a, b);
-pair(1);
-pair(1, 2);
 ```
 
 ```output
 8 slices of large
 4 slices of small
-1 1
-1 2
 ```
 
 ### Variadic functions
@@ -678,20 +639,6 @@ A function literal followed by `(...)` runs immediately.
 
 ```output
 I ran!
-```
-
-### Everything is callable
-
-Calling a value that isn't a function just gives the value back, as if it were
-a function with no parameters.
-
-```pie run+
-x = 5;
-print(x());
-```
-
-```output
-5
 ```
 
 ### Destructuring parameters
@@ -1141,18 +1088,10 @@ print(c.me().count);
 
 ### Printing objects
 
-Objects print their members. Members whose names start with `__` are hidden
-unless you pass `show_hidden = true`. Give a class a `toString` method that
-returns a string to control how it prints.
+Objects print their members. Give a class a `toString` method that returns a
+string to control how it prints.
 
 ```pie run+
-Secret = class {
-    name = "Pie";
-    __pin = 1234;
-};
-print(Secret());
-print(Secret(), show_hidden = true);
-
 Fraction = class {
     top = 1;
     bottom = 2;
@@ -1162,13 +1101,6 @@ print(Fraction(3, 4));
 ```
 
 ```output
-Object {
-    name = "Pie";
-}
-Object {
-    name = "Pie";
-    __pin = 1234;
-}
 3/4
 ```
 
@@ -1246,16 +1178,12 @@ print(twice(21));
 ```
 
 A function type is the parameter types in parentheses, `->`, then the result
-type. `=>` always makes a function and `->` always makes a function type. To
-use a function itself as a type (a [concept](#concepts)), wrap it in
-parentheses so its body stops before the `=`: `x: ((n) => n > 0) = 5;`.
+type. `=>` always makes a function and `->` always makes a function type.
 
 ### Function types
 
 Function types have the same walls as parameter lists. Keyword-only entries
-need a name, because that's how they're passed. Names anywhere else are
-allowed, but only for the reader: `(width: Int, height: Int) -> Int` is the
-same type as `(Int, Int) -> Int`.
+need a name, because that's how they're passed.
 
 ```pie run+
 Greeter = (String; times: Int) -> Any;
@@ -1325,23 +1253,6 @@ print(short);
 pair: (Int, Int) = (1,);
 ```
 
-Tuple types work anywhere a type does, including results and
-[concepts](#concepts):
-
-```pie run+
-divide = (a: Int, b: Int): (Int, Int) => (a / b, a % b);
-print(divide(17, 5));
-
-Positive = (n: Int) => n > 0;
-corner: (Positive, Positive) = (3, 4);
-print(corner);
-```
-
-```output
-(3, 2)
-(3, 4)
-```
-
 ### Types are values
 
 Types can be stored in variables, passed to functions and printed. A type alias
@@ -1372,18 +1283,7 @@ print(Pair);
 (Int, Int)
 ```
 
-Without the `:`, `(Int, Int)` is a tuple holding two types. Function types
-never need it, since `( ... ) ->` is always a function type:
-
-```pie run+
-IntToBool = (Int) -> Bool;
-isBig: IntToBool = (n: Int): Bool => n > 100;
-print(IntToBool);
-```
-
-```output
-(Int) -> Bool
-```
+Without the `:`, `(Int, Int)` is a tuple holding two types.
 
 Since types are values, a parameter's type can depend on an earlier parameter:
 
@@ -1869,9 +1769,8 @@ multiplying Syntax {
 something else
 ```
 
-Everything outside the holes has to be the same: the same operators, the same
-names, the same number of arguments. Using the same hole twice means "the same
-code both times":
+Everything outside the holes has to be the same. Using the same hole twice
+means "the same code both times":
 
 ```pie run+
 double = (code) => match code {
@@ -1887,58 +1786,10 @@ doubles it
 doesn't
 ```
 
-Names without a `$` match only themselves. That includes parameters, so
-`(x) => $body` matches a function whose parameter is called `x`, while
-`($p) => $body` matches a function with one parameter of any name:
-
-```pie run+
-kind = (code) => match code {
-    `($p) => $p + 1` => "adds one to its parameter";
-    `(x) => $body`   => "takes exactly x";
-    _                => "other";
-};
-print(kind(`(n) => n + 1`));
-print(kind(`(x) => 0`));
-print(kind(`(y) => 0`));
-```
-
-```output
-adds one to its parameter
-takes exactly x
-other
-```
-
-Code patterns work everywhere code can go: calls, operators, functions,
-assignments, loops, comprehensions, classes, blocks, and even `match`
-expressions and their own patterns.
-
-A hole can have any name Pie allows, including the improper ones from
-[Assign to anything](#assign-to-anything). Write those in braces: `${1 + 2}`.
-
-Plain values in a pattern have to be exactly the same too:
-
-```pie run+
-kind = (code) => match code {
-    `$a + 0`  => "adds zero";
-    `f($arg)` => "calls f";
-    _         => "other";
-};
-print(kind(`5 + 0`));
-print(kind(`f(5)`));
-print(kind(`g(5)`));
-```
-
-```output
-adds zero
-calls f
-other
-```
-
 ### Pack holes
 
-`$...name` matches *any number* of things in a row: arguments, list or tuple
-elements, or the lines of a block. The case gets them as a pack of `Syntax`,
-just like a `...name` parameter:
+`$...name` matches any number of things in a row, like a function's arguments.
+The case gets them as a pack:
 
 ```pie run+
 shape = (code) => match code {
@@ -1957,52 +1808,10 @@ one argument
 2 in the middle
 ```
 
-A list of things can have several pack holes only if they all have the same
-name. Then each one has to match the same things:
-
-```pie run+
-mirrored = (code) => match code {
-    `f($...a, 0, $...a)` => "mirrored";
-    _                    => "not mirrored";
-};
-print(mirrored(`f(1, 2, 0, 1, 2)`));
-print(mirrored(`f(1, 2, 0, 2, 1)`));
-```
-
-```output
-mirrored
-not mirrored
-```
-
-Pack holes can have improper names too (`$...{1 + 2}`), and `$..._` is a
-common way to say "and whatever else":
-
-```pie run+
-first = (code) => match code {
-    `{$head, $..._}` => head;
-};
-print(first(`{1, 2, 3}`));
-```
-
-```output
-Syntax {
-    1
-}
-```
-
-```pie error+
-match `f(1, 2)` { `f($...a, $...b)` => 0; };
-```
-
-Two different pack holes in one list could split the arguments in more than one
-way, so that's an error.
-
 ### Splicing
 
 Holes work in syntax literals too. When the literal runs, each hole is filled
-in, so you can build new code out of old code. A hole means the same thing in
-a pattern and in a literal, so what you take apart in one case, you can put
-back together in its body:
+in, so you can build new code out of old code:
 
 ```pie run+
 swap = (code) => match code {
@@ -2017,27 +1826,19 @@ Syntax {
 }
 ```
 
-A hole is filled with whatever its name holds. Code goes in as it is.
-Numbers, strings and booleans go in as the code that writes them. A hole with
-an improper name, like `${n * 2}`, is filled with whatever that expression
-gives:
+A hole is filled with whatever its name holds. Code goes in as it is, and
+numbers, strings and booleans go in as the code that writes them:
 
 ```pie run+
 n = 10;
 name = "Pie";
 print(`greet($name, $n * 2)`);
-print(`${n * 2} + 1`);
-print(__builtin_eval(`${n * 2} + 1`));
 ```
 
 ```output
 Syntax {
     greet("Pie", (10 * 2))
 }
-Syntax {
-    (20 + 1)
-}
-21
 ```
 
 That's enough to build working functions out of pieces:
@@ -2052,27 +1853,7 @@ print(inc(41));
 42
 ```
 
-or to rewrite code:
-
-```pie run+
-simplify = (code) => match code {
-    `$a * 1` => a;
-    `1 * $a` => a;
-    other    => other;
-};
-y = 7;
-print(simplify(`y * 1`));
-print(__builtin_eval(simplify(`1 * y`)));
-```
-
-```output
-Syntax {
-    y
-}
-7
-```
-
-`$...name` splices every element of a pack or a list, each in its own place:
+`$...name` splices every element of a pack or a list:
 
 ```pie run+
 reverse = (code) => match code {
@@ -2092,60 +1873,6 @@ Syntax {
 }
 3 2 1
 ```
-
-Values that can't be written as code, like functions and objects, can't fill a
-hole:
-
-```pie error+
-g = (x) => x;
-`f($g)`;
-```
-
-### Writing `$` in code
-
-Inside backticks, `$` always starts a hole. To write a name or an operator
-that starts with `$`, write one extra `$`:
-
-```pie run+
-$total = 10;
-n = 5;
-code = `$$total + $n`;
-print(code);
-print(__builtin_eval(code));
-```
-
-```output
-Syntax {
-    ($total + 5)
-}
-15
-```
-
-```pie run+
-prefix(LOW +) $ = (x) => x * 100;
-print($ 3);
-match `$$ 3` {
-    `$$ $amount` => print("dollars:", amount);
-};
-```
-
-```output
-300
-dollars: Syntax {
-    3
-}
-```
-
-| In backticks | Means |
-| --- | --- |
-| `$name` | a hole called `name` (any name works, even `$+` or `$1`) |
-| `${1 + 2}` | a hole with an improper name |
-| `$...name`, `$...{1 + 2}` | a pack hole |
-| `$$name` | the name `$name` |
-| `$$` | the name (or operator) `$` |
-
-A `$` on its own, followed by anything else, is an error. Outside backticks,
-`$` is an ordinary character in names.
 
 ## Namespaces and modules
 
@@ -2342,12 +2069,6 @@ name you define.
 ### Reserved punctuation
 
 `(` `)` `{` `}` `,` `;` `:` `::` `=` `:=` `=>` `->` `.` `..` `...` and backticks.
-
-Only the exact token is reserved: `-->`, `->>` and `<->` are still names you
-can use for operators.
-
-Inside backticks, `$` starts a [hole](#matching-code). Everywhere else it's a
-normal name character.
 
 ### Installing
 
